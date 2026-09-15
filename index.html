@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<!--
+  MODO RASCUNHO ATIVO.
+  Enquanto data-modo="rascunho", os blocos que ainda dependem de informação real
+  aparecem contornados em azul, com uma etiqueta dizendo o que falta ali.
+  Para publicar: troque por data-modo="producao" (e leia o PREENCHER.md antes).
+-->
+<html lang="pt-BR" data-modo="rascunho">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- SEO: título ≤60 caracteres, descrição ≤155. Ver PREENCHER.md itens 1 e 2. -->
+  <title>[NOME DO EBOOK] — [PROMESSA CENTRAL EM ATÉ 6 PALAVRAS]</title>
+  <meta name="description" content="[PREENCHER: descrição persuasiva de até 155 caracteres, com a promessa central e a palavra-chave do nicho. Ex.: 'Um caminho simples para...'.]">
+  <!-- ⚠️ RASCUNHO: noindex enquanto a página está no GitHub Pages para revisão.
+       AO PUBLICAR DE VERDADE, troque por: <meta name="robots" content="index, follow">
+       Se esquecer isso, o Google nunca vai indexar a página. É o item 0 do PREENCHER.md. -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- DESCOMENTE ao definir o domínio (PREENCHER.md, item 14) e troque o domínio.
+       Fica comentado porque uma URL com placeholder é pior que nenhuma: o Google
+       trata como canonical inválido e a prévia do link quebra no WhatsApp.
+  <link rel="canonical" href="https://SEU-DOMINIO.com.br/">
+  -->
+
+  <!-- Idem: og:url e as imagens de compartilhamento exigem URL absoluta e real.
+  <meta property="og:url" content="https://SEU-DOMINIO.com.br/">
+  <meta property="og:image" content="https://SEU-DOMINIO.com.br/assets/img/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Capa do ebook [NOME DO EBOOK]">
+  <meta name="twitter:image" content="https://SEU-DOMINIO.com.br/assets/img/og-image.jpg">
+  -->
+  <meta name="theme-color" content="#111111">
+
+  <!-- Compartilhamento: é o que faz o link ficar apresentável no WhatsApp,
+       Instagram e Telegram. Imagem obrigatoriamente 1200x630. -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="[NOME DO EBOOK]">
+  <meta property="og:title" content="[NOME DO EBOOK] — [PROMESSA CENTRAL]">
+  <meta property="og:description" content="[PREENCHER: mesma descrição persuasiva, até 155 caracteres.]">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="[NOME DO EBOOK] — [PROMESSA CENTRAL]">
+  <meta name="twitter:description" content="[PREENCHER: mesma descrição persuasiva.]">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <!-- Fontes autohospedadas (as duas da primeira tela vêm com preload).
+       Ver os @font-face em assets/css/input.css. -->
+  <link rel="preload" href="assets/fonts/play-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+
+  <link rel="stylesheet" href="assets/css/tailwind.css">
+
+  <!-- Marca que o JS está ativo. É o que autoriza o CSS a esconder as seções
+       antes do reveal — sem JS, nada fica invisível. -->
+  <script>document.documentElement.classList.add('js');</script>
+
+  <!-- Dados estruturados: perguntas do FAQ. As respostas precisam ficar
+       IDÊNTICAS ao que está visível na página (exigência do Google). -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Como recebo o ebook depois da compra?",
+        "acceptedAnswer": { "@type": "Answer", "text": "[PREENCHER: descreva o processo real de entrega — e-mail automático com o PDF, acesso à área de membros, prazo em minutos.]" }
+      },
+      {
+        "@type": "Question",
+        "name": "Preciso de algum conhecimento prévio para aproveitar o conteúdo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "[PREENCHER: responda com honestidade sobre o nível de quem vai ler.]" }
+      },
+      {
+        "@type": "Question",
+        "name": "Em quais aparelhos consigo ler?",
+        "acceptedAnswer": { "@type": "Answer", "text": "[PREENCHER: celular, tablet, computador, Kindle — liste apenas o que realmente funciona.]" }
+      },
+      {
+        "@type": "Question",
+        "name": "Quanto tempo por dia eu preciso reservar?",
+        "acceptedAnswer": { "@type": "Answer", "text": "[PREENCHER: tempo realista de leitura ou prática, sem prometer resultado em prazo fixo.]" }
+      },
+      {
+        "@type": "Question",
+        "name": "E se eu não gostar? Como funciona a garantia?",
+        "acceptedAnswer": { "@type": "Answer", "text": "[PREENCHER: prazo real da garantia e o passo a passo exato do reembolso — precisa refletir o que será cumprido.]" }
+      },
+      {
+        "@type": "Question",
+        "name": "O pagamento é seguro? Quais formas são aceitas?",
+        "acceptedAnswer": { "@type": "Answer", "text": "[PREENCHER: nome da plataforma de checkout e as formas de pagamento realmente disponíveis.]" }
+      },
+      {
+        "@type": "Question",
+        "name": "Este material substitui acompanhamento pastoral, médico ou psicológico?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Não. Este ebook é um material de estudo e reflexão e não substitui acompanhamento pastoral, médico ou psicológico. Se você está enfrentando uma situação de saúde física ou mental, procure um profissional qualificado." }
+      },
+      {
+        "@type": "Question",
+        "name": "Com quem falo se tiver algum problema?",
+        "acceptedAnswer": { "@type": "Answer", "text": "[PREENCHER: e-mail ou WhatsApp real de suporte e o prazo médio de resposta.]" }
+      }
+    ]
+  }
+  </script>
+
+  <!--
+    JSON-LD de Produto: descomente APENAS quando houver preço real.
+    Publicar com preço inventado gera erro no Rich Results Test e engana o comprador.
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "[NOME DO EBOOK]",
+    "description": "[DESCRIÇÃO REAL DO EBOOK]",
+    "image": "https://[DOMINIO]/assets/img/capa-ebook.webp",
+    "brand": { "@type": "Brand", "name": "[NOME DO AUTOR OU MARCA]" },
+    "offers": {
+      "@type": "Offer",
+      "url": "https://[DOMINIO]/",
+      "priceCurrency": "BRL",
+      "price": "00.00",
+      "availability": "https://schema.org/InStock"
+    }
+  }
+  </script>
+  -->
+
+  <script src="assets/js/main.js" defer></script>
+</head>
+
+<body class="bg-bg text-text font-sans antialiased">
+
+  <a href="#conteudo" class="btn btn-secundario sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]">
+    Pular para o conteúdo
+  </a>
+
+  <!-- Faixa de rascunho: some sozinha quando data-modo="producao". -->
+  <div class="aviso-rascunho sticky top-0 z-50 bg-accent px-4 py-2 text-center text-sm font-semibold text-white">
+    Modo rascunho — os blocos contornados mostram onde cada informação real vai entrar. Não publicar assim.
+  </div>
+
+  <!-- ===================== HEADER / NAV ===================== -->
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-bg/90 backdrop-blur">
+    <nav class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8" aria-label="Navegação principal">
+
+      <a href="#hero" class="font-display text-lg font-bold tracking-tight sm:text-xl">
+        [NOME DO EBOOK]
+      </a>
+
+      <ul class="hidden items-center gap-7 text-sm font-medium text-white/80 lg:flex">
+        <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#solucao">O ebook</a></li>
+        <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#beneficios">Benefícios</a></li>
+        <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#autor">Autor</a></li>
+        <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#oferta">Oferta</a></li>
+        <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#faq">Dúvidas</a></li>
+      </ul>
+
+      <a href="#preco" class="btn btn-primario js-cta hidden !min-h-11 !px-5 !text-sm lg:inline-flex" data-cta-origem="menu">
+        Quero o ebook
+        <span class="btn-mais" aria-hidden="true">+</span>
+      </a>
+
+      <button
+        type="button"
+        id="menu-toggle"
+        class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-surface lg:hidden"
+        aria-label="Abrir menu de navegação"
+        aria-expanded="false"
+        aria-controls="menu-mobile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-6 w-6" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"/>
+        </svg>
+      </button>
+    </nav>
+
+    <div id="menu-mobile" class="hidden border-t border-white/10 bg-bg lg:hidden">
+      <ul class="mx-auto flex w-full max-w-6xl flex-col px-5 py-2 sm:px-6">
+        <li><a class="block py-3 text-base font-medium text-white/85" href="#solucao">O ebook</a></li>
+        <li><a class="block py-3 text-base font-medium text-white/85" href="#beneficios">Benefícios</a></li>
+        <li><a class="block py-3 text-base font-medium text-white/85" href="#autor">Autor</a></li>
+        <li><a class="block py-3 text-base font-medium text-white/85" href="#oferta">Oferta</a></li>
+        <li><a class="block py-3 text-base font-medium text-white/85" href="#faq">Dúvidas</a></li>
+        <li class="py-3">
+          <a href="#preco" class="btn btn-primario js-cta w-full" data-cta-origem="menu-mobile">
+            Quero o ebook
+            <span class="btn-mais" aria-hidden="true">+</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- ===================== 1. HERO + VSL ===================== -->
+    <!-- Objetivo: capturar atenção em 5s e comunicar a promessa. Gatilho: curiosidade + clareza. -->
+    <section id="hero" class="relative overflow-hidden px-5 py-14 sm:px-6 md:py-20 lg:px-8 lg:py-24">
+      <div class="mx-auto w-full max-w-6xl">
+
+        <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+
+          <div class="reveal">
+            <!-- Texto branco, não accent: #524CFF sobre o fundo #111111 dá 3,45:1,
+                 abaixo do mínimo AA de 4,5:1 para texto pequeno. O traço accent ao
+                 lado mantém a cor de destaque presente sem custo de legibilidade. -->
+            <p class="mb-4 inline-flex items-center gap-3 whitespace-nowrap text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <span class="divisor-diagonal !max-w-8"></span>
+              Ebook cristão
+            </p>
+
+            <!-- Escreva uma frase sobre o que a pessoa vai SENTIR E VIVER, não sobre o que
+                 o ebook contém. Sem garantir resultado: possibilidade e caminho, nunca certeza.
+                 Destaque 2 ou 3 palavras com <em class="text-accent not-italic">. -->
+            <h1 class="font-display text-[2rem] font-bold leading-[1.08] sm:text-5xl lg:text-6xl"
+                data-pendente="A promessa central — o que a pessoa vai sentir e viver">
+              [A promessa central, em <em class="text-accent not-italic">uma frase</em>]
+            </h1>
+
+            <!-- 1 ou 2 frases: para quem é o ebook e qual a primeira mudança percebida. -->
+            <p class="mt-5 max-w-xl text-base text-white/75 sm:text-lg"
+               data-pendente="Subtítulo: para quem é e qual a primeira mudança percebida">
+              [Para quem é este ebook e a primeira mudança que a pessoa costuma perceber.]
+            </p>
+
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a href="#preco" class="btn btn-primario js-cta w-full sm:w-auto" data-cta-origem="hero">
+                Quero começar agora
+                <span class="btn-mais" aria-hidden="true">+</span>
+              </a>
+              <a href="#solucao" class="btn btn-secundario w-full sm:w-auto">
+                Ver o que tem dentro
+                <span class="btn-mais" aria-hidden="true">+</span>
+              </a>
+            </div>
+
+            <p class="mt-5 text-sm text-white/60" data-pendente="Prazo real da garantia">
+              Compra segura · Acesso imediato · Garantia de [PREENCHER: X] dias
+            </p>
+          </div>
+
+          <!-- VSL — vídeo de apresentação -->
+          <div class="reveal">
+            <!-- A etiqueta de pendência fica num wrapper próprio: no vídeo o clip-path
+                 cortaria o texto dela, e no .glow-accent ela brigaria com o ::before
+                 que desenha o brilho. -->
+            <div data-pendente="Vídeo de apresentação (VSL): ID do YouTube/Vimeo + imagem de capa">
+             <div class="glow-accent">
+              <div
+                id="video-vsl"
+                class="corte-diagonal corte-diagonal-lg relative w-full overflow-hidden bg-surface"
+                style="aspect-ratio: 16 / 9;"
+                data-video-provider="youtube"
+                data-video-id="[PREENCHER_ID_DO_VIDEO]">
+
+                <img
+                  src="assets/img/video-capa.webp"
+                  alt=""
+                  width="1280"
+                  height="720"
+                  class="absolute inset-0 h-full w-full object-cover opacity-45"
+                  loading="eager"
+                  decoding="async">
+
+                <button
+                  type="button"
+                  class="js-play-video absolute inset-0 flex flex-col items-center justify-center gap-3 text-center"
+                  aria-label="Reproduzir o vídeo de apresentação">
+                  <span class="badge-quadrado !h-16 !w-16">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="!h-7 !w-7" aria-hidden="true">
+                      <path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.3-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/>
+                    </svg>
+                  </span>
+                  <span class="px-4 text-sm font-semibold text-white">Assista antes de decidir</span>
+                </button>
+              </div>
+             </div>
+            </div>
+
+            <!-- Transcrição: acessibilidade e conteúdo indexável pelo Google. -->
+            <details class="mt-4 rounded-xl bg-surface p-4">
+              <summary class="cursor-pointer text-sm font-semibold text-white/85">
+                Ler a transcrição do vídeo
+              </summary>
+              <div class="mt-3 text-sm leading-relaxed text-white/70"
+                   data-pendente="Transcrição do vídeo (ganha em acessibilidade e em SEO)">
+                [PREENCHER: cole aqui a transcrição completa do vídeo.]
+              </div>
+            </details>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 2. IDENTIFICAÇÃO DA DOR ===================== -->
+    <!-- Objetivo: o leitor se reconhecer. Gatilho: empatia / espelhamento. -->
+    <section id="dor" class="bg-surface px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto w-full max-w-4xl reveal">
+        <span class="divisor-diagonal mb-5 block"></span>
+        <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+          Se você chegou até aqui, provavelmente reconhece isso
+        </h2>
+
+        <ul class="mt-8 grid gap-4 md:grid-cols-2"
+            data-pendente="As 4 frases de dor — dependem da persona (SPEC, seção 2)">
+          <li class="corte-diagonal bg-bg p-5 text-base text-white/80">
+            [PREENCHER: dor 1, na linguagem que a própria pessoa usaria.]
+          </li>
+          <li class="corte-diagonal bg-bg p-5 text-base text-white/80">
+            [PREENCHER: dor 2.]
+          </li>
+          <li class="corte-diagonal bg-bg p-5 text-base text-white/80">
+            [PREENCHER: dor 3.]
+          </li>
+          <li class="corte-diagonal bg-bg p-5 text-base text-white/80">
+            [PREENCHER: dor 4 — de preferência a objeção mais comum, já nomeada aqui.]
+          </li>
+        </ul>
+
+        <p class="mt-8 text-base text-white/70 sm:text-lg">
+          Se alguma dessas frases parece escrita sobre você, saiba que isso não é falta de fé nem fraqueza.
+          É sinal de que falta um caminho — e caminho é algo que se aprende.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== 3. AGITAÇÃO ===================== -->
+    <!-- Objetivo: mostrar o custo de não resolver. Gatilho: aversão à perda,
+         em linguagem de esperança — nunca medo ou culpa (CLAUDE.md). -->
+    <section id="agitacao" class="px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto w-full max-w-4xl reveal">
+        <span class="divisor-diagonal mb-5 block"></span>
+        <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+          O que costuma acontecer quando a gente adia
+        </h2>
+
+        <div class="mt-6 space-y-4 text-base text-white/75 sm:text-lg"
+             data-pendente="Custo de adiar — escrever sem medo e sem culpa, só consequência natural">
+          <p>
+            [PREENCHER: 2 ou 3 parágrafos sobre o que se perde ao continuar adiando.
+            Descreva a consequência natural, não uma ameaça. Nada de "se você não agir agora, vai...".]
+          </p>
+        </div>
+
+        <p class="mt-6 border-l-2 border-accent pl-5 text-base text-white/70">
+          Nada disso é irreversível. Recomeçar é justamente o que a fé cristã ensina a fazer — quantas vezes forem necessárias.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== 4. SOLUÇÃO ===================== -->
+    <!-- Objetivo: introduzir o ebook como o caminho. Gatilho: autoridade / clareza. -->
+    <section id="solucao" class="bg-surface px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto grid w-full max-w-6xl items-center gap-10 lg:grid-cols-2 lg:gap-14">
+
+        <div class="reveal order-2 lg:order-1">
+          <span class="divisor-diagonal mb-5 block"></span>
+          <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+            Apresentando [NOME DO EBOOK]
+          </h2>
+
+          <p class="mt-5 text-base text-white/75 sm:text-lg"
+             data-pendente="O que é o ebook, em 2 ou 3 frases">
+            [PREENCHER: explique em 2 ou 3 frases o que é o ebook e qual caminho ele propõe.
+            Traduza o conteúdo em experiência: o que a pessoa vai fazer, não só o que vai ler.]
+          </p>
+
+          <ul class="mt-7 space-y-3 text-base text-white/80"
+              data-pendente="O que está dentro: capítulos, páginas, formato — dados reais">
+            <li class="flex gap-3">
+              <span class="mt-1 text-accent" aria-hidden="true">✓</span>
+              [PREENCHER: número real de capítulos e o que cada parte cobre.]
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 text-accent" aria-hidden="true">✓</span>
+              [PREENCHER: número real de páginas e formato de entrega (PDF, área de membros).]
+            </li>
+            <li class="flex gap-3">
+              <span class="mt-1 text-accent" aria-hidden="true">✓</span>
+              [PREENCHER: recursos práticos reais — exercícios, plano de leitura, perguntas de reflexão.]
+            </li>
+          </ul>
+
+          <a href="#preco" class="btn btn-primario js-cta mt-8 w-full sm:w-auto" data-cta-origem="solucao">
+            Quero este material
+            <span class="btn-mais" aria-hidden="true">+</span>
+          </a>
+        </div>
+
+        <div class="reveal order-1 lg:order-2">
+          <!-- Etiqueta no wrapper: <img> é elemento substituído e não renderiza ::before. -->
+          <div class="mx-auto w-full max-w-sm" data-pendente="Capa do ebook — trocar assets/img/capa-ebook.webp (800x1000)">
+            <div class="glow-accent">
+              <img
+                src="assets/img/capa-ebook.webp"
+                alt="Capa do ebook [NOME DO EBOOK]"
+                width="800"
+                height="1000"
+                loading="lazy"
+                decoding="async"
+                class="corte-diagonal corte-diagonal-lg w-full bg-bg object-cover">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== 5. BENEFÍCIOS ===================== -->
+    <!-- Objetivo: focar no "depois". Gatilho: desejo. Grid 2 colunas no desktop. -->
+    <section id="beneficios" class="px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto w-full max-w-6xl">
+        <div class="reveal max-w-3xl">
+          <span class="divisor-diagonal mb-5 block"></span>
+          <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+            O que pode mudar na sua caminhada
+          </h2>
+          <p class="mt-4 text-base text-white/70 sm:text-lg">
+            Cada pessoa vive isso no seu tempo. O que este material oferece é o caminho — o passo é seu.
+          </p>
+        </div>
+
+        <div class="reveal mt-10 grid gap-5 md:grid-cols-2"
+             data-pendente="Os 6 benefícios — traduzir o conteúdo em transformação sentida (SPEC, seção 4, item 5)">
+
+          <article class="corte-diagonal bg-surface p-6 sm:p-7">
+            <span class="badge-quadrado" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v18H6.5A2.5 2.5 0 0 1 4 18.5z"/><path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v18h5.5a2.5 2.5 0 0 0 2.5-2.5z"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-lg font-bold sm:text-xl">[PREENCHER: benefício 1]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER: descreva o que a pessoa passa a sentir ou viver.]</p>
+          </article>
+
+          <article class="corte-diagonal bg-surface p-6 sm:p-7">
+            <span class="badge-quadrado" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-lg font-bold sm:text-xl">[PREENCHER: benefício 2]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER: descreva o "depois", não a característica.]</p>
+          </article>
+
+          <article class="corte-diagonal bg-surface p-6 sm:p-7">
+            <span class="badge-quadrado" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 0 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-lg font-bold sm:text-xl">[PREENCHER: benefício 3]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER.]</p>
+          </article>
+
+          <article class="corte-diagonal bg-surface p-6 sm:p-7">
+            <span class="badge-quadrado" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-lg font-bold sm:text-xl">[PREENCHER: benefício 4]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER.]</p>
+          </article>
+
+          <article class="corte-diagonal bg-surface p-6 sm:p-7">
+            <span class="badge-quadrado" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-lg font-bold sm:text-xl">[PREENCHER: benefício 5]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER.]</p>
+          </article>
+
+          <article class="corte-diagonal bg-surface p-6 sm:p-7">
+            <span class="badge-quadrado" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12.5l2.2 2.2L15.5 10"/><path d="M12 2.8l2.4 1.8 3 .1 1 2.8 2.4 1.7-1 2.8 1 2.8-2.4 1.7-1 2.8-3 .1L12 21.2l-2.4-1.8-3-.1-1-2.8L3.2 14.8l1-2.8-1-2.8 2.4-1.7 1-2.8 3-.1z"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-lg font-bold sm:text-xl">[PREENCHER: benefício 6]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER.]</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 6. PROVA SOCIAL ===================== -->
+    <!-- REGRA INEGOCIÁVEL: nenhum depoimento, print ou número pode ser inventado.
+         Esta seção fica oculta em produção até existirem depoimentos reais. -->
+    <section id="depoimentos" class="bg-surface px-5 py-14 sm:px-6 md:py-20 lg:px-8" data-oculto-em-producao>
+      <div class="mx-auto w-full max-w-6xl">
+        <div class="reveal max-w-3xl">
+          <span class="divisor-diagonal mb-5 block"></span>
+          <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+            Quem já leu, conta
+          </h2>
+        </div>
+
+        <div class="reveal mt-10 grid gap-5 md:grid-cols-2"
+             data-pendente="Depoimentos REAIS (texto, print ou vídeo) + autorização de uso de cada pessoa">
+          <blockquote class="corte-diagonal bg-bg p-6 sm:p-7">
+            <p class="text-base text-white/80">[PREENCHER: depoimento real, palavra por palavra, sem edição que mude o sentido.]</p>
+            <footer class="mt-5 text-sm font-semibold text-white/60">— [Nome real], [cidade ou contexto]</footer>
+          </blockquote>
+
+          <blockquote class="corte-diagonal bg-bg p-6 sm:p-7">
+            <p class="text-base text-white/80">[PREENCHER: segundo depoimento real.]</p>
+            <footer class="mt-5 text-sm font-semibold text-white/60">— [Nome real], [cidade ou contexto]</footer>
+          </blockquote>
+
+          <blockquote class="corte-diagonal bg-bg p-6 sm:p-7">
+            <p class="text-base text-white/80">[PREENCHER: terceiro depoimento real.]</p>
+            <footer class="mt-5 text-sm font-semibold text-white/60">— [Nome real], [cidade ou contexto]</footer>
+          </blockquote>
+
+          <blockquote class="corte-diagonal bg-bg p-6 sm:p-7">
+            <p class="text-base text-white/80">[PREENCHER: quarto depoimento real — ou apague este bloco se tiver menos de quatro.]</p>
+            <footer class="mt-5 text-sm font-semibold text-white/60">— [Nome real], [cidade ou contexto]</footer>
+          </blockquote>
+        </div>
+
+        <p class="mt-8 text-sm text-white/55">
+          Depoimentos são relatos individuais e não representam garantia de resultado. Cada caminhada é única.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== 7. SOBRE O AUTOR ===================== -->
+    <!-- Objetivo: confiança e conexão. Gatilho: autoridade / similaridade. -->
+    <section id="autor" class="px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto grid w-full max-w-5xl items-start gap-9 md:grid-cols-[minmax(0,14rem)_1fr] md:gap-12">
+
+        <div class="reveal mx-auto w-full max-w-[14rem] md:mx-0"
+             data-pendente="Foto do autor — trocar assets/img/autor.webp (560x700)">
+          <img
+            src="assets/img/autor.webp"
+            alt="Foto de [NOME DO AUTOR]"
+            width="560"
+            height="700"
+            loading="lazy"
+            decoding="async"
+            class="corte-diagonal w-full bg-surface object-cover">
+        </div>
+
+        <div class="reveal">
+          <span class="divisor-diagonal mb-5 block"></span>
+          <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+            Quem escreveu este ebook
+          </h2>
+          <div class="mt-5 space-y-4 text-base text-white/75 sm:text-lg"
+               data-pendente="Bio do autor: história, formação e credenciais REAIS">
+            <p>[PREENCHER: quem é o autor, em 2 ou 3 parágrafos. Comece pela história que o aproxima de quem vai ler — a autoridade vem da experiência vivida, não só do título.]</p>
+            <p>[PREENCHER: formação, ministério, tempo de experiência, obras anteriores. Apenas o que for verdadeiro e verificável.]</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== 8. OFERTA E BÔNUS ===================== -->
+    <!-- Objetivo: deixar claro o que está incluso. Gatilho: ancoragem de valor. -->
+    <section id="oferta" class="bg-surface px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto w-full max-w-5xl">
+        <div class="reveal max-w-3xl">
+          <span class="divisor-diagonal mb-5 block"></span>
+          <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+            Tudo o que você recebe
+          </h2>
+        </div>
+
+        <div class="reveal mt-10 grid gap-5 md:grid-cols-2"
+             data-pendente="Itens inclusos e bônus REAIS — só listar o que será realmente entregue">
+
+          <div class="corte-diagonal bg-bg p-6 sm:p-7">
+            <h3 class="font-display text-lg font-bold sm:text-xl">O ebook completo</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER: nome, número de páginas e formato de entrega.]</p>
+          </div>
+
+          <div class="corte-diagonal bg-bg p-6 sm:p-7">
+            <h3 class="font-display text-lg font-bold sm:text-xl">[PREENCHER: bônus 1]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER: o que é e para que serve. Se não houver bônus, apague este bloco — não inventar.]</p>
+          </div>
+
+          <div class="corte-diagonal bg-bg p-6 sm:p-7">
+            <h3 class="font-display text-lg font-bold sm:text-xl">[PREENCHER: bônus 2]</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER ou apagar.]</p>
+          </div>
+
+          <div class="corte-diagonal bg-bg p-6 sm:p-7">
+            <h3 class="font-display text-lg font-bold sm:text-xl">Acesso imediato</h3>
+            <p class="mt-2 text-base text-white/70">[PREENCHER: descreva o processo real de entrega e o prazo.]</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 9. PREÇO E CONDIÇÕES ===================== -->
+    <!-- Objetivo: reduzir fricção. Gatilho: ancoragem de preço. -->
+    <section id="preco" class="px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto w-full max-w-2xl reveal text-center">
+        <span class="divisor-diagonal mx-auto mb-5 block"></span>
+        <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+          Quanto custa
+        </h2>
+
+        <div class="corte-diagonal corte-diagonal-lg mt-8 bg-surface p-7 sm:p-10"
+             data-pendente="Preço, parcelamento e formas de pagamento reais">
+          <p class="text-sm font-semibold uppercase tracking-[0.18em] text-white/60">
+            Investimento
+          </p>
+          <p class="mt-3 font-display text-4xl font-bold sm:text-5xl">
+            R$ [PREENCHER]
+          </p>
+          <p class="mt-2 text-base text-white/70">
+            ou [PREENCHER: parcelamento real, ex. 12x de R$ XX,XX]
+          </p>
+
+          <a href="#" class="btn btn-primario js-cta js-checkout mt-8 w-full" data-cta-origem="preco">
+            Comprar agora
+            <span class="btn-mais" aria-hidden="true">+</span>
+          </a>
+
+          <p class="mt-5 text-sm text-white/60">
+            [PREENCHER: formas de pagamento reais — Pix, cartão, boleto.] · Pagamento processado por
+            [PREENCHER: nome da plataforma de checkout].
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 10. GARANTIA ===================== -->
+    <!-- Objetivo: remover o risco. Gatilho: reversão de risco.
+         O texto precisa refletir EXATAMENTE o que será cumprido. -->
+    <section id="garantia" class="bg-surface px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto w-full max-w-3xl reveal">
+        <div class="corte-diagonal corte-diagonal-lg bg-bg p-7 sm:p-10">
+          <span class="badge-quadrado" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7.5 3v6c0 4.5-3 7.6-7.5 9-4.5-1.4-7.5-4.5-7.5-9V6z"/><path d="M9 12.2l2.1 2.1L15.4 10"/></svg>
+          </span>
+
+          <h2 class="mt-5 font-display text-2xl font-bold sm:text-3xl"
+              data-pendente="Prazo real da garantia (em dias)">
+            Garantia de [PREENCHER: X] dias
+          </h2>
+
+          <p class="mt-4 text-base text-white/75 sm:text-lg"
+             data-pendente="Condições exatas de reembolso — precisam ser cumpridas à risca">
+            [PREENCHER: descreva a garantia exatamente como ela funciona. Prazo em dias corridos a partir
+            da compra, se é incondicional, por onde a pessoa solicita e em quanto tempo o dinheiro volta.
+            Não escreva nada aqui que não será cumprido.]
+          </p>
+
+          <p class="mt-4 text-base text-white/60">
+            Se o material não fizer sentido para o seu momento, o pedido de reembolso é simples e sem constrangimento.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 11. ESCASSEZ (SOMENTE SE REAL) ===================== -->
+    <!-- O JS só exibe esta seção se data-deadline tiver uma data ISO real.
+         Vazio = seção some. Nunca contagem regressiva falsa. -->
+    <section
+      id="escassez"
+      class="hidden px-5 py-14 sm:px-6 md:py-20 lg:px-8"
+      data-deadline=""
+      data-oculto-em-producao>
+      <div class="mx-auto w-full max-w-3xl text-center">
+        <span class="divisor-diagonal mx-auto mb-5 block"></span>
+        <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl"
+            data-pendente="Só preencha se houver uma condição real com data de fim">
+          [PREENCHER: qual é a condição real que termina — e por quê]
+        </h2>
+        <p class="mt-4 text-base text-white/70">
+          [PREENCHER: explique honestamente o motivo do prazo. Sem motivo real, apague a seção inteira.]
+        </p>
+        <p class="mt-7 font-display text-3xl font-bold text-accent sm:text-4xl" id="contador" role="timer" aria-live="off"></p>
+        <a href="#preco" class="btn btn-primario js-cta mt-8" data-cta-origem="escassez">
+          Garantir o meu
+          <span class="btn-mais" aria-hidden="true">+</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ===================== 12. FAQ ===================== -->
+    <!-- Objetivo: quebrar objeções finais. Gatilho: redução de incerteza. -->
+    <section id="faq" class="px-5 py-14 sm:px-6 md:py-20 lg:px-8">
+      <div class="mx-auto w-full max-w-3xl">
+        <div class="reveal">
+          <span class="divisor-diagonal mb-5 block"></span>
+          <h2 class="font-display text-2xl font-bold sm:text-3xl lg:text-4xl">
+            Dúvidas frequentes
+          </h2>
+        </div>
+
+        <div class="reveal mt-9 space-y-3" id="faq-lista">
+
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-1">
+                <span>Como recebo o ebook depois da compra?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-1" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Processo real de entrega">
+              [PREENCHER: descreva o processo real de entrega — e-mail automático com o PDF, acesso à área de membros, prazo em minutos.]
+            </div>
+          </div>
+
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-2">
+                <span>Preciso de algum conhecimento prévio para aproveitar o conteúdo?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-2" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Nível exigido do leitor">
+              [PREENCHER: responda com honestidade sobre o nível de quem vai ler.]
+            </div>
+          </div>
+
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-3">
+                <span>Em quais aparelhos consigo ler?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-3" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Aparelhos compatíveis">
+              [PREENCHER: celular, tablet, computador, Kindle — liste apenas o que realmente funciona.]
+            </div>
+          </div>
+
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-4">
+                <span>Quanto tempo por dia eu preciso reservar?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-4" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Tempo realista de leitura">
+              [PREENCHER: tempo realista de leitura ou prática, sem prometer resultado em prazo fixo.]
+            </div>
+          </div>
+
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-5">
+                <span>E se eu não gostar? Como funciona a garantia?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-5" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Condições reais de reembolso (mesmo texto da seção Garantia)">
+              [PREENCHER: prazo real da garantia e o passo a passo exato do reembolso — precisa refletir o que será cumprido.]
+            </div>
+          </div>
+
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-6">
+                <span>O pagamento é seguro? Quais formas são aceitas?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-6" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Plataforma de checkout e formas de pagamento">
+              [PREENCHER: nome da plataforma de checkout e as formas de pagamento realmente disponíveis.]
+            </div>
+          </div>
+
+          <!-- Resposta real, não precisa preencher. -->
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-7">
+                <span>Este material substitui acompanhamento pastoral, médico ou psicológico?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-7" class="hidden px-5 pb-5 text-base text-white/70">
+              Não. Este ebook é um material de estudo e reflexão e não substitui acompanhamento pastoral,
+              médico ou psicológico. Se você está enfrentando uma situação de saúde física ou mental,
+              procure um profissional qualificado.
+            </div>
+          </div>
+
+          <div class="corte-diagonal bg-surface">
+            <h3>
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-8">
+                <span>Com quem falo se tiver algum problema?</span>
+                <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
+              </button>
+            </h3>
+            <div id="faq-8" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Canal de suporte real">
+              [PREENCHER: e-mail ou WhatsApp real de suporte e o prazo médio de resposta.]
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 13. CTA FINAL ===================== -->
+    <!-- Seção de inversão de contraste: fundo accent cheio, botão branco. -->
+    <section id="cta-final" class="bg-accent px-5 py-16 sm:px-6 md:py-24 lg:px-8">
+      <div class="mx-auto w-full max-w-3xl reveal text-center text-white">
+        <h2 class="font-display text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl"
+            data-pendente="Reforço da promessa central, com outras palavras">
+          [PREENCHER: reforce a promessa central aqui, dita de outro jeito.]
+        </h2>
+
+        <p class="mx-auto mt-5 max-w-xl text-base sm:text-lg">
+          O primeiro passo costuma ser o mais difícil. Depois dele, é só caminhada.
+        </p>
+
+        <a href="#" class="btn btn-secundario js-cta js-checkout mt-9 w-full sm:w-auto" data-cta-origem="cta-final">
+          Quero meu exemplar
+          <span class="btn-mais" aria-hidden="true">+</span>
+        </a>
+
+        <!-- Texto pequeno sobre o accent fica em branco puro: com opacidade
+             reduzida o contraste cairia abaixo do mínimo AA (SPEC, acessibilidade). -->
+        <p class="mt-6 text-sm text-white" data-pendente="Prazo real da garantia">
+          Garantia de [PREENCHER: X] dias · Acesso imediato · Compra 100% segura
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== 14. RODAPÉ ===================== -->
+  <footer class="border-t border-white/10 px-5 py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto w-full max-w-6xl">
+
+      <div class="grid gap-8 md:grid-cols-3">
+        <div>
+          <p class="font-display text-lg font-bold">[NOME DO EBOOK]</p>
+          <p class="mt-3 text-sm text-white/60" data-pendente="Razão social e CNPJ do vendedor">
+            [PREENCHER: razão social] · CNPJ [PREENCHER]
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-semibold uppercase tracking-[0.16em] text-white/70">Suporte</h2>
+          <ul class="mt-3 space-y-2 text-sm text-white/60" data-pendente="Canais de contato reais">
+            <li><a class="hover:text-white" href="mailto:[PREENCHER-EMAIL]">[PREENCHER: e-mail de suporte]</a></li>
+            <li>[PREENCHER: horário de atendimento e prazo de resposta]</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-sm font-semibold uppercase tracking-[0.16em] text-white/70">Legal</h2>
+          <ul class="mt-3 space-y-2 text-sm text-white/60" data-pendente="Páginas de política e termos">
+            <li><a class="hover:text-white" href="[PREENCHER-URL]">Política de privacidade</a></li>
+            <li><a class="hover:text-white" href="[PREENCHER-URL]">Termos de uso</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 border-t border-white/10 pt-7 text-sm leading-relaxed text-white/50">
+        <p>
+          Este material tem finalidade de estudo e reflexão. Não constitui aconselhamento médico, psicológico
+          ou jurídico, e não promete cura, milagre ou resultado garantido. Cada caminhada é pessoal.
+        </p>
+        <p class="mt-3">
+          © <span id="ano-atual">2026</span> [PREENCHER: nome do autor ou da marca]. Todos os direitos reservados.
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+</body>
+</html>
