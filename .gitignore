@@ -1,0 +1,10 @@
+node_modules/
+.vercel/
+.DS_Store
+*.log
+
+# assets/css/tailwind.css NÃO entra aqui de propósito:
+# é o CSS compilado que a página carrega em produção e precisa ser versionado.
+
+# Configuração local do Claude Code (não compartilhar)
+.claude/settings.local.json

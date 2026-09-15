@@ -1,0 +1,16 @@
+{
+  "name": "landing-ebook",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Landing page de vendas do ebook — site estático (HTML + Tailwind compilado + JS puro).",
+  "scripts": {
+    "css": "tailwindcss -i assets/css/input.css -o assets/css/tailwind.css --minify",
+    "css:watch": "tailwindcss -i assets/css/input.css -o assets/css/tailwind.css --watch",
+    "dev": "npx serve ."
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
