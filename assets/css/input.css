@@ -1,0 +1,376 @@
+/* =============================================================================
+   input.css — ARQUIVO-FONTE do Tailwind. NÃO é este que a página carrega.
+   Depois de editar, recompile:
+
+     npx @tailwindcss/cli -i assets/css/input.css -o assets/css/tailwind.css --minify
+
+   A página carrega assets/css/tailwind.css (gerado). Sem build no deploy.
+   ============================================================================= */
+
+@import "tailwindcss";
+
+@source "../../index.html";
+@source "../js/main.js";
+
+/* -----------------------------------------------------------------------------
+   Fontes autohospedadas.
+   Antes vinham da Google Fonts, mas aquele <link> é CSS de outro domínio e
+   bloqueia o primeiro render (~510ms medidos no Lighthouse mobile). Servidos
+   daqui, chegam junto com o resto da página.
+
+   Arquivos já reduzidos ao conjunto de caracteres do português (latim + ãçõáê…)
+   e aos pesos realmente usados: Play só em bold, Inter em 400/600/700.
+   font-display: swap — o texto aparece na fonte de sistema e troca depois,
+   em vez de ficar invisível esperando o download.
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Play";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/play-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/inter-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../fonts/inter-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/inter-700.woff2") format("woff2");
+}
+
+/* -----------------------------------------------------------------------------
+   Design tokens — case "DronyX — Military Tech" (slide "Project colors").
+   Valores exatos, conforme CLAUDE.md. Accent é a ÚNICA cor de destaque:
+   hierarquia vem de tamanho, peso e surface vs bg — nunca de uma segunda cor.
+   -------------------------------------------------------------------------- */
+@theme {
+  --color-bg: #111111;      /* Chinese Black  — fundo principal */
+  --color-surface: #212121; /* Raisin Black   — cards e seções alternadas */
+  --color-accent: #524cff;  /* Ultramarine    — CTA, ícones, seção de inversão */
+  --color-text: #ffffff;    /* White          — texto sobre escuro/accent */
+
+  /* Play cobre o subset latin (U+0000–00FF): ã, ç, õ, á, ê renderizam.
+     Fallbacks mantidos para o caso de a Google Fonts falhar. */
+  --font-display: "Play", "Space Grotesk", "Archivo", system-ui, sans-serif;
+  --font-sans: "Inter", -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* -----------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Evita qualquer chance de overflow horizontal entre 320px e 1920px. */
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 1rem;          /* mínimo 16px no corpo — não força zoom no mobile */
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    line-height: 1.1;
+  }
+
+  /* text-wrap: balance faz várias passadas de layout por bloco. Aplicado nos 33
+     headings da página custava ~1,2s de Style & Layout no Lighthouse mobile.
+     Fica só onde muda a leitura: os títulos grandes. */
+  h1, h2 {
+    text-wrap: balance;
+  }
+
+  /* Foco sempre visível — nunca outline:none sem substituto (WCAG 2.1 AA). */
+  :focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* Imagens e vídeo sempre fluidos, nunca largura fixa em px. */
+  img, svg, video, iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* O header é sticky: sem isso, o link de âncora para a seção e o topo dela
+     fica escondido atrás da barra. */
+  section[id], footer[id] {
+    scroll-margin-top: 6rem;
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Componentes-assinatura do case.
+   Exceção pontual ao "evitar CSS customizado" do CLAUDE.md: clip-path e glow
+   radial não existem como utilitário Tailwind.
+   -------------------------------------------------------------------------- */
+@layer components {
+
+  /* Cantos diagonais cortados — assinatura visual do design, não um detalhe.
+     Corta o canto superior-esquerdo e o inferior-direito. */
+  .corte-diagonal {
+    --corte: 16px;
+    clip-path: polygon(
+      var(--corte) 0%,
+      100% 0%,
+      100% calc(100% - var(--corte)),
+      calc(100% - var(--corte)) 100%,
+      0% 100%,
+      0% var(--corte)
+    );
+  }
+
+  .corte-diagonal-lg { --corte: 28px; }
+
+  @media (min-width: 768px) {
+    .corte-diagonal { --corte: 24px; }
+    .corte-diagonal-lg { --corte: 48px; }
+  }
+
+  /* Divisor de seção com a mesma linguagem diagonal. */
+  .divisor-diagonal {
+    height: 2px;
+    background: var(--color-accent);
+    width: 100%;
+    max-width: 8rem;
+  }
+
+  /* Badge quadrado com cantos arredondados, fundo accent, ícone branco.
+     Um por feature/benefício. */
+  .badge-quadrado {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 auto;
+    border-radius: 0.875rem;
+    background-color: var(--color-accent);
+    color: #ffffff;
+  }
+
+  .badge-quadrado svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /* Glow radial accent atrás da imagem principal do hero. */
+  .glow-accent {
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* O conteúdo precisa ficar acima do brilho — sem isto o glow some atrás do
+     fundo da página em vez de aparecer atrás da imagem. */
+  .glow-accent > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .glow-accent::before {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    z-index: 0;
+    background: radial-gradient(
+      circle at 50% 45%,
+      color-mix(in srgb, var(--color-accent) 62%, transparent) 0%,
+      color-mix(in srgb, var(--color-accent) 22%, transparent) 42%,
+      transparent 70%
+    );
+    filter: blur(52px);
+    pointer-events: none;
+  }
+
+  /* Botões CTA em pill, com ícone "+" à direita.
+     Área de toque mínima 44x44px no mobile. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 3rem;          /* 48px > mínimo de 44px */
+    padding: 0.875rem 1.75rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    /* Só transform e opacity — nunca width/height/top/left. */
+    transition: transform 150ms ease-out, opacity 150ms ease-out;
+  }
+
+  .btn:active { transform: scale(0.97); }
+
+  .btn .btn-mais {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    flex: 0 0 auto;
+    border-radius: 9999px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .btn-primario {
+    background-color: var(--color-accent);
+    color: #ffffff;
+  }
+
+  .btn-primario .btn-mais {
+    background-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .btn-primario:hover { opacity: 0.9; }
+
+  .btn-secundario {
+    background-color: #ffffff;
+    color: var(--color-bg);
+  }
+
+  .btn-secundario .btn-mais {
+    background-color: rgba(17, 17, 17, 0.1);
+  }
+
+  .btn-secundario:hover { opacity: 0.88; }
+
+  /* Foco em botão: contorno escuro por fora do branco, para funcionar
+     tanto sobre fundo escuro quanto sobre a seção accent. */
+  .btn:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(17, 17, 17, 0.9);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+    .btn:active { transform: none; }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   Motion — entrada de seção no scroll (fade + translateY discreto).
+   Só transform e opacity. ease-out na entrada. 360ms.
+   -------------------------------------------------------------------------- */
+@layer components {
+  /* O estado inicial escondido só existe quando o JS está ativo para revelar
+     de volta. Sem JS (ou com o JS falhando), todo o conteúdo nasce visível. */
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 360ms ease-out, transform 360ms ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal,
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+   MODO RASCUNHO — demarcação visual do que ainda falta preencher.
+
+   Ligado por <html data-modo="rascunho"> (padrão enquanto o conteúdo real
+   não chegou). Troque para data-modo="producao" e todos os contornos e
+   etiquetas somem de uma vez, sem caçar trecho por trecho no HTML.
+
+   Atenção: isso esconde os MARCADORES, não os textos "[PREENCHER: ...]"
+   escritos no HTML — esses precisam ser substituídos à mão. Ver PREENCHER.md.
+   -------------------------------------------------------------------------- */
+@layer components {
+  [data-modo="rascunho"] [data-pendente] {
+    position: relative;
+    box-shadow: inset 0 0 0 2px var(--color-accent);
+    border-radius: 4px;
+  }
+
+  /* A etiqueta é um bloco no fluxo normal, não absoluta: assim ela empurra o
+     conteúdo para baixo em vez de cobri-lo quando o texto ocupa duas linhas. */
+  [data-modo="rascunho"] [data-pendente]::before {
+    content: "FALTA: " attr(data-pendente);
+    display: block;
+    /* Em container grid/flex a etiqueta vira um item e roubaria uma célula —
+       isto faz com que ela ocupe a linha inteira. */
+    grid-column: 1 / -1;
+    flex: 0 0 100%;
+    margin-bottom: 0.875rem;
+    padding: 0.3rem 0.625rem;
+    background-color: var(--color-bg);
+    border-left: 3px solid var(--color-accent);
+    border-radius: 0 4px 4px 0;
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
+    text-align: left;
+    text-transform: none;
+    pointer-events: none;
+  }
+
+  /* Sobre a seção de fundo accent, o contorno e a etiqueta em accent sumiriam. */
+  [data-modo="rascunho"] .bg-accent [data-pendente] {
+    box-shadow: inset 0 0 0 2px #ffffff;
+  }
+
+  [data-modo="rascunho"] .bg-accent [data-pendente]::before {
+    border-left-color: #ffffff;
+  }
+
+  /* Faixa fixa lembrando que a página não está pronta para publicar. */
+  [data-modo="rascunho"] .aviso-rascunho {
+    display: block;
+  }
+
+  .aviso-rascunho { display: none; }
+
+  /* Blocos que NÃO podem ir ao ar sem dado real (prova social, escassez):
+     visíveis no rascunho para apresentação, ocultos em produção até que
+     o atributo seja removido manualmente. */
+  [data-modo="producao"] [data-oculto-em-producao] {
+    display: none !important;
+  }
+}
