@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Descomente e troque o domínio ao publicar (PREENCHER.md, item 14).
+# Com um placeholder no lugar da URL, o Google trata o robots.txt como inválido.
+# Sitemap: https://SEU-DOMINIO.com.br/sitemap.xml
