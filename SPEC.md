@@ -1,7 +1,7 @@
-# SPEC — Página de Vendas: Ebook [Nicho Cristão]
+# SPEC — Coleção NEUROFLOW: 11 ebooks cristãos
 
 ## 1. Objetivo de negócio
-Converter visitantes (vindos de tráfego pago/orgânico, redes sociais, WhatsApp) em compradores do ebook,
+Converter visitantes (vindos de tráfego pago/orgânico, redes sociais, WhatsApp) em compradores de um ou vários dos 11 ebooks,
 por meio de uma página única, persuasiva e honesta, que leva o visitante até o botão de checkout.
 
 ## 2. Público-alvo / persona
@@ -10,12 +10,24 @@ por meio de uma página única, persuasiva e honesta, que leva o visitante até 
 - Objeção mais comum: [ex.: "já tentei outros materiais e não funcionou"]
 > Preencher com base em quem já comprou ou no perfil desejado — isso muda o copy inteiro.
 
-## 3. Produto
-- Nome do ebook: [definir]
-- Formato de entrega: PDF / área de membros
-- Preço: [definir] | Parcelamento: [definir]
-- Bônus inclusos: [definir, se houver]
-- Garantia: [ex.: 7 dias, reembolso incondicional]
+## 3. Coleção e seleção
+- Marca: NEUROFLOW.
+- 11 ebooks; títulos, capas, resumos e classificação de cada um ainda pendentes.
+- Temas iniciais do filtro: Tentação, Medo e Identidade. Não atribuir temas por inferência.
+- Seleção livre de 1 a 11 títulos; opções de combo com 5 e coleção completa com 11.
+- Preços individuais, preços dos combos, descontos e regras para 2–4/6–10 ainda pendentes.
+- Carrossel com setas, gesto lateral e avanço automático a cada 5,5 segundos quando
+  estiver visível e o mouse fora dos cards/setas. Pausa no hover, toque, foco visível
+  por teclado e aba oculta; retoma automaticamente ao sair. Não há botão de ativação.
+  Sem avanço automático com movimento reduzido. Sem JS, lista completa.
+- Seleção apenas em memória nesta página; filtros preservam os itens selecionados.
+- Mensagens apresentam quantidades reais, sem alegar economia ainda não definida.
+- Checkout múltiplo ainda não integrado: o catálogo bloqueia o destino único legado.
+  O resumo visual não é um carrinho financeiro nem confirma compra/entrega.
+- A informação anterior de 25 páginas e o bônus do COPY AUTOR.pdf não foram atribuídos
+  automaticamente a cada um dos 11 títulos. Confirmar extensão, formato e bônus por produto.
+- Download imediato informado no PDF; confirmar operação de entrega na plataforma escolhida.
+- Garantia, condições de reembolso e pagamento: [definir].
 
 ## 4. Estrutura da página (seção → objetivo → gatilho mental)
 
@@ -24,7 +36,7 @@ por meio de uma página única, persuasiva e honesta, que leva o visitante até 
 | 1 | Hero + vídeo de apresentação (VSL) | Capturar atenção em 5s, comunicar a promessa central | Curiosidade, clareza da promessa |
 | 2 | Identificação da dor | Fazer o leitor se reconhecer no problema | Empatia / espelhamento |
 | 3 | Agitação | Mostrar o custo de não resolver o problema | Aversão à perda |
-| 4 | Apresentação da solução | Introduzir o ebook como o caminho | Autoridade / clareza |
+| 4 | Catálogo com 11 ebooks | Explorar temas e montar uma seleção | Clareza / autonomia |
 | 5 | Benefícios (transformação) | Focar no "depois", não nas características | Desejo |
 | 6 | Prova social | Depoimentos reais, prints, números reais | Prova social |
 | 7 | Sobre o autor | Gerar confiança e conexão | Autoridade / similaridade |
@@ -40,8 +52,13 @@ por meio de uma página única, persuasiva e honesta, que leva o visitante até 
 Se não houver dado real ainda, a seção fica com placeholder marcado `[PREENCHER]` — não se inventa prova social.
 
 ## 5. Requisitos técnicos
-- Stack: HTML + Tailwind CSS (CDN) + JavaScript puro (ou Next.js, se o projeto for crescer para várias páginas/produtos).
-- Identidade visual: seguir os design tokens (cores, tipografia, estilo) definidos em `CLAUDE.md` → seção "Identidade visual / Design tokens".
+- Stack atual: HTML + Tailwind CSS 4 compilado localmente + JavaScript puro. O fonte é
+  `assets/css/input.css`; a página carrega `assets/css/tailwind.css`, gerado e versionado.
+  Não há build de CSS no deploy nem uso de Play CDN. Next.js permanece apenas uma
+  possibilidade a avaliar se o projeto crescer para várias páginas/produtos.
+- Identidade visual: seguir os tokens e padrões consolidados em `AGENTS.md` → seção
+  "Identidade visual e movimento", implementados em `assets/css/input.css`.
+  `CLAUDE.md` permanece como referência histórica da decisão de design.
 - Performance: Lighthouse ≥ 90 em mobile.
 - Pixels de rastreamento: Meta Pixel e GA4, com IDs em variáveis/placeholder.
 - Botão de CTA: link externo para o checkout (Hotmart/Kiwify/Eduzz/outro — definir).
@@ -93,8 +110,8 @@ concorrência, tempo). O que dá pra garantir é que a página não perca pontos
   (`utm_source`, `utm_medium`, `utm_campaign`) na URL, sem quebrar layout nem perder o disparo do pixel — importante
   se o ebook for divulgado por afiliados/parceiros.
 
-### Acessibilidade (WCAG 2.1 nível AA)
-- **Contraste de texto** — já validado para a paleta do design system (`CLAUDE.md`):
+### Acessibilidade (WCAG 2.2 nível AA)
+- **Contraste de texto** — valores registrados para a paleta do design system (não substituem a validação do layout atual):
   - Branco sobre `--color-bg` (#111111): ~18.9:1 — muito acima do exigido.
   - Branco sobre `--color-surface` (#212121): ~16.1:1 — muito acima do exigido.
   - Branco sobre `--color-accent` (#524CFF): ~5.5:1 — passa AA (mín. 4.5:1) para texto normal e títulos, mas fica
@@ -109,30 +126,32 @@ concorrência, tempo). O que dá pra garantir é que a página não perca pontos
 - **Vídeo de apresentação**: incluir legenda ou transcrição — ajuda acessibilidade e também é indexável pelo
   Google (ganho duplo: a11y + SEO).
 - **`prefers-reduced-motion`**: reduzir ou remover animações de entrada para quem tem essa preferência ativada
-  no sistema (ver seção "Motion & micro-interações" no `CLAUDE.md`).
+  no sistema (ver seção "Identidade visual e movimento" no `AGENTS.md`).
 - **Tipografia**: tamanho mínimo de 16px no corpo do texto, para não forçar zoom no mobile.
 
 ## 6. Integrações
 - Checkout: [Hotmart / Kiwify / Eduzz / Stripe — definir]
 - E-mail marketing (opcional, se houver captura de lead antes da oferta): [definir ferramenta]
-- Analytics: GA4 + Meta Pixel
+- Analytics: GA4 + Meta Pixel, somente com IDs válidos e permissão explícita de medição.
+- Prévia de revisão: GitHub Pages no link existente, via Actions publicando somente `dist/`.
+- Hospedagem comercial: ainda não definida; pacote público portátil em `dist/` (ver `docs/deployment.md`).
 
 
 ## 7. Conteúdo que o usuário (você) precisa fornecer antes da execução
 - [ ] Link ou arquivo do vídeo de apresentação
 - [ ] Depoimentos reais (texto, print ou vídeo)
 - [ ] Capa do ebook / imagens
-- [ ] Textos de "sobre o autor"
+- [x] Apresentação da NEUROFLOW recebida em COPY AUTOR.pdf; imagem de autoria ainda pendente.
 - [ ] Preço, condições de pagamento e link de checkout
 - [ ] IDs de pixel (Meta/GA4), se já existirem
 
 ## 8. Critérios de aceite (Definition of Done)
-- [ ] Página publicada em URL acessível (Vercel/Netlify)
+- [ ] Página publicada em URL acessível, em provedor estático escolhido pelo responsável
 - [ ] Testada e sem overflow horizontal em 320px, 375px, 414px, 768px, 1024px, 1280px e 1440px (ver tabela de breakpoints na seção 5)
 - [ ] Todos os CTAs apontam para o checkout correto
 - [ ] Pixels disparando corretamente (testado com Meta Pixel Helper / GA4 DebugView)
 - [ ] Nenhum dado fabricado (depoimento, número, contagem regressiva falsa)
-- [ ] Lighthouse mobile ≥ 90 em Performance, ≥ 95 em SEO e ≥ 95 em Acessibilidade
+- [ ] Lighthouse mobile ≥ 90 em Performance, ≥ 95 em SEO e ≥ 95 em Acessibilidade e ≥ 95 em Boas Práticas
 - [ ] Dados estruturados (JSON-LD) validados sem erros no Google Rich Results Test
 - [ ] Preview de compartilhamento (Open Graph) testado no Facebook Sharing Debugger e/ou WhatsApp
 - [ ] Navegação 100% possível apenas por teclado (Tab/Enter), com foco sempre visível

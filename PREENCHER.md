@@ -1,9 +1,69 @@
 # PREENCHER — o que falta antes de publicar
 
-A página está **completa em estrutura, design e comportamento**, mas em **modo rascunho**: tudo que ainda
-depende de informação real aparece contornado em azul, com uma etiqueta `FALTA: ...` dizendo o que entra ali.
+A página possui estrutura, design e interações implementados, mas está em **modo rascunho**.
+Blocos marcados com `data-pendente` aparecem contornados em azul, com uma etiqueta `FALTA: ...`.
+Também há pendências em metadados e configurações sem marcador visual. A prontidão
+para publicação depende de conteúdo real e das validações deste checklist.
 
 Use este arquivo como checklist. Ele está na ordem em que as coisas aparecem na página.
+As instruções de desenvolvimento estão em `AGENTS.md`; `CLAUDE.md` permanece como referência histórica.
+
+## Link para revisão dos amigos
+
+A prévia usa https://mauriciodequeiroz.github.io/neuro-flow/ e permanece em rascunho,
+sem indexação e com compra bloqueada. O fluxo `.github/workflows/pages.yml` publica
+somente `dist/` após push em `main`; instruções em `README.md` e `docs/deployment.md`.
+Os bloqueadores abaixo se referem ao lançamento comercial, não à revisão do rascunho.
+
+## Coleção de 11 ebooks — organização iniciada em 21/10/2026
+
+O catálogo está em `index.html`, seção `#solucao`, com cards `#ebook-01` até
+`#ebook-11`. Cada card contém título, capa, resumo e preço provisórios. Para completar:
+
+- [ ] Preencher os 11 títulos, resumos, capas (com width/height intrínsecos), preços e extensão/formato de cada ebook.
+- [ ] Definir `data-temas` por card: tokens separados por espaço, como `tentacao medo`.
+  Valores disponíveis: `tentacao`, `medo`, `identidade`; um ebook pode ter vários.
+  Todos começam vazios. Enquanto isso, filtros específicos mostram aviso de preparação.
+  Ao criar outro tema, acrescentar seu botão no fieldset de filtros.
+- [ ] Conferir quais títulos incluem exercícios/bônus; não presumir que todos têm 25 páginas.
+- [ ] Definir preço individual, combo de 5, coleção de 11 e condições para outras quantidades.
+- [ ] Integrar seleção e preços reais ao checkout e à entrega. **Preencher apenas
+  CHECKOUT_URL não basta:** `data-checkout-pendente` mantém bloqueado o destino legado
+  para evitar cobrar/entregar um único produto quando vários foram selecionados.
+  Remover essa proteção somente com integração real implementada e validada.
+- [ ] Atualizar FAQ/JSON-LD e condições de entrega/garantia de acordo com a operação real.
+  O Product comentado é referência antiga de um único produto; não ativar para representar
+  os 11 títulos como se fossem um ebook.
+
+A seleção atual é demonstrativa e fica apenas na memória da página; recarregar a
+limpa. Selecionar 5 ou 11 muda o incentivo por quantidade, sem calcular preço ou
+prometer desconto. O carrossel avança automaticamente quando o mouse está fora dos cards/setas;
+pausa sobre o conteúdo e retoma ao sair, sem botão de ativação. Toque, foco visível
+por teclado, aba oculta e movimento reduzido também suspendem o avanço. A foto do autor e o card de preço mantêm
+as bordas solicitadas. Os três problemas registrados na revisão independente
+continuam pendentes; este trabalho não os corrige.
+
+## Conteúdo incorporado de COPY AUTOR.pdf — 21/10/2026
+
+- Apresentação da NEUROFLOW, incluindo o alcance mensal informado pelo responsável.
+- Texto sobre adiar o recomeço, cinco benefícios, 25 páginas de fácil leitura,
+  bônus de exercícios práticos e disponibilidade para download imediato.
+- Suporte: oneuroflowlj@gmail.com; Instagram e TikTok: @neurofllow;
+  atendimento das 08h às 18h. Prazo de resposta e dias de atendimento não informados.
+- FAQ de entrega, aparelhos e contato atualizado junto ao JSON-LD.
+
+O nome da marca não define o título do ebook nem a razão social. Preço mais acessível
+foi mantido como observação geral sobre ebooks; não foi criada comparação de preço
+específica deste produto. Formato do arquivo, plataforma de entrega, capítulos,
+sexto benefício e possível segundo bônus continuam pendentes. Os cinco benefícios
+recebidos descrevem o formato digital; benefícios específicos do conteúdo ainda
+podem ser detalhados posteriormente.
+
+O PDF menciona prints de comentários, mas não os fornece: frases de dor e depoimentos
+permanecem como estavam. Não foram criadas citações nem coletadas imagens de seguidores.
+Foto, capa, vídeo, nome/promessa do ebook, preço, garantia, checkout, domínio, IDs e
+políticas não foram fornecidos e permanecem pendentes. As instruções abaixo são um
+checklist de publicação; considere o preenchimento parcial registrado nesta seção.
 
 ---
 
@@ -17,18 +77,21 @@ No topo do `index.html`:
 
 | Valor | O que acontece |
 |---|---|
-| `rascunho` | Contornos azuis + etiquetas `FALTA:` + faixa de aviso no topo. Seções sem dado real (depoimentos, escassez) ficam **visíveis**, para você apresentar onde a informação entraria. |
+| `rascunho` | Contornos azuis + etiquetas `FALTA:` + faixa de aviso no topo. Depoimentos ficam visíveis; escassez permanece oculta enquanto não houver prazo futuro válido. |
 | `producao` | Contornos, etiquetas e faixa somem. Blocos marcados com `data-oculto-em-producao` **desaparecem** da página. |
 
 ⚠️ **Trocar para `producao` não apaga os textos `[PREENCHER: ...]` escritos no HTML.** Esses são texto de
-verdade e precisam ser substituídos à mão — é justamente o que este arquivo lista. O comando abaixo mostra
-tudo que ainda falta trocar:
+verdade e precisam ser substituídos à mão — é justamente o que este arquivo lista.
+Use a busca abaixo como triagem de placeholders, incluindo os que não contêm `PREENCHER`:
 
 ```bash
-grep -rn "PREENCHER" index.html assets/js/main.js robots.txt sitemap.xml
+rg -n 'PREENCHER|\[[^]]+\]|SEU-DOMINIO' index.html assets/js/main.js robots.txt sitemap.xml
 ```
 
-Só publique quando esse comando não retornar mais nada.
+A busca também encontra comentários, referências a este guia e sintaxe JavaScript;
+esses resultados não devem ser removidos indiscriminadamente. Ela não é uma validação
+automática nem exaustiva. Revise os resultados e a página: não pode haver conteúdo
+ou configuração de produção pendente. Comentários técnicos podem permanecer.
 
 ---
 
@@ -36,8 +99,8 @@ Só publique quando esse comando não retornar mais nada.
 
 ### 0. Liberar a indexação no Google
 - **Onde:** `index.html`, no `<head>`.
-- Hoje está `<meta name="robots" content="noindex, nofollow">`, de propósito: enquanto a página estiver
-  hospedada no GitHub Pages para revisão, ela não deve ser indexada em estado de rascunho.
+- Hoje está `<meta name="robots" content="noindex, nofollow">`, de propósito: a página
+  não deve ser indexada em estado de rascunho, independentemente da hospedagem usada para revisão.
 - **Ao publicar no domínio final, troque por:** `<meta name="robots" content="index, follow">`
 - Esquecer disso é o erro mais caro da lista: a página vai ao ar e o Google simplesmente a ignora.
 
@@ -50,8 +113,9 @@ Só publique quando esse comando não retornar mais nada.
   automaticamente para o checkout — importante se houver afiliados.
 
 ### 2. Nome do ebook
-- **Onde:** aparece em 8 pontos do `index.html` como `[NOME DO EBOOK]` — `<title>`, Open Graph, Twitter Card,
-  logo do menu, seção `#solucao` e rodapé.
+- **Onde:** procure todas as ocorrências de `[NOME DO EBOOK]` no `index.html`, incluindo
+  `<title>`, Open Graph, Twitter Card, logo do menu, seção `#solucao`, alt e rodapé,
+  além dos blocos comentados que serão ativados.
 - Substitua todos de uma vez: `sed -i 's/\[NOME DO EBOOK\]/Seu Título Aqui/g' index.html`
 
 ### 3. Promessa central
@@ -72,7 +136,7 @@ Só publique quando esse comando não retornar mais nada.
 ### 6. Persona — define todo o copy
 - **Onde:** seções `#dor`, `#agitacao` e `#beneficios`.
 - Preencha antes a seção 2 do `SPEC.md`: quem é, dor principal, objeção mais comum.
-- Regras de tom (do `CLAUDE.md`): acolhedor e direto, a partir de esperança e propósito — **nunca** medo ou
+- Regras de tom (do `AGENTS.md`): acolhedor e direto, a partir de esperança e propósito — **nunca** medo ou
   culpa, nunca "sua vida vai mudar em 7 dias".
 
 ---
@@ -91,6 +155,13 @@ Só publique quando esse comando não retornar mais nada.
 
 ### 8. Depoimentos reais
 - **Onde:** seção `#depoimentos`.
+- Recebido e inserido: depoimento do **Pr. Josué**, integralmente como enviado, sem
+  atribuir o relato aos 11 ebooks. A expressão “essa prestação de ler a bíblia” foi
+  preservada; não corrigir uma citação por suposição.
+- Ainda falta registrar a autorização de uso e identificar qual ebook foi avaliado.
+  Não foram fornecidos foto, cidade, igreja ou outras credenciais; não inferir.
+- Os três espaços restantes continuam pendentes. O texto recebido está sem borda
+  de pendência; apenas a informação faltante e os outros espaços ficam marcados.
 - Regra inegociável: nada de depoimento inventado, "adaptado" ou de banco de imagens. Peça autorização de uso
   a cada pessoa.
 - A seção está marcada com `data-oculto-em-producao`: enquanto não houver depoimentos reais, ela **some
@@ -99,6 +170,7 @@ Só publique quando esse comando não retornar mais nada.
 
 ### 9. Sobre o autor
 - **Onde:** seção `#autor` (bio) + `assets/img/autor.webp` (foto).
+- A apresentação da NEUROFLOW já foi preenchida com o PDF; a imagem ainda falta.
 - Só credenciais verdadeiras e verificáveis.
 
 ### 10. Oferta e bônus
@@ -107,7 +179,8 @@ Só publique quando esse comando não retornar mais nada.
 
 ### 11. FAQ
 - **Onde:** seção `#faq`, 8 perguntas.
-- As perguntas já estão escritas; faltam as respostas específicas do produto (a nº 7, sobre acompanhamento
+- As perguntas já estão escritas; as respostas nº 1 e nº 3 já foram preenchidas; a nº 8 tem contato/horário, mas falta prazo de resposta.
+- As demais ainda dependem do produto (a nº 7, sobre acompanhamento
   pastoral/médico/psicológico, já está respondida e não precisa mudar).
 - ⚠️ Ao editar uma resposta, **atualize também o JSON-LD `FAQPage` no `<head>`**. O Google exige que o texto
   do dado estruturado seja idêntico ao visível na página.
@@ -134,8 +207,14 @@ elas estão declaradas no HTML para evitar que o layout "pule" durante o carrega
 
 Se mudar alguma dimensão, atualize os atributos `width`/`height` correspondentes no `index.html`.
 
+A configuração opcional da Vercel agora exige revalidação de arquivos com nomes
+estáveis, inclusive imagens. Configure a mesma estratégia no provedor escolhido;
+headers no repositório não comprovam o cache remoto. Se uma versão antiga já tiver
+sido publicada com cache anual, pode ser necessário versionar URLs ou invalidar o
+cache anterior. Veja `docs/deployment.md`.
+
 > `assets/fonts/` não precisa de nada: as fontes Play e Inter já estão autohospedadas, reduzidas aos
-> caracteres do português e aos pesos em uso. Não apague — a página depende delas.
+> caracteres do português e aos pesos 400/600/700 usados no corpo e Play 700 nos títulos. Não apague — a página depende delas.
 
 ---
 
@@ -156,7 +235,13 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
   | Clicar em qualquer CTA interno | `ClickCTA` | `select_promotion` |
   | Clicar em ir para o checkout | `InitiateCheckout` | `begin_checkout` |
   | Dar play na VSL | `PlayVSL` | `video_start` |
-- Teste com **Meta Pixel Helper** e **GA4 DebugView** depois de preencher.
+- IDs válidos exibem o painel de preferências. Sem permissão explícita, nenhum pixel
+  inicia; aceitar libera medição, recusar mantém desligada e retirar permissão recarrega
+  a página. A escolha vale nesta aba. Isso não apaga cookies anteriores nem dados enviados.
+- Antes de habilitar IDs reais, finalize a política de privacidade e revise finalidades,
+  retenção e configurações dos provedores conforme `docs/deployment.md`.
+- Teste com **Meta Pixel Helper** e **GA4 DebugView** depois de preencher, incluindo
+  recusa, aceitação e retirada. Cliques não representam compras concluídas.
 
 ### 14. Domínio final
 Três trechos estão **comentados** de propósito, porque uma URL com placeholder é pior que nenhuma — o Google
@@ -165,7 +250,7 @@ trata como canonical inválido e a prévia do link quebra no WhatsApp. Ao defini
 | Arquivo | O que descomentar |
 |---|---|
 | `index.html` | bloco do `<link rel="canonical">` |
-| `index.html` | bloco de `og:url` + `og:image` + `twitter:image` (5 linhas) |
+| `index.html` | bloco de `og:url`, `og:image`, suas dimensões/alt e `twitter:image` |
 | `robots.txt` | a linha `Sitemap:` |
 | `sitemap.xml` | trocar `[PREENCHER-DOMINIO]` e atualizar `<lastmod>` |
 
@@ -188,7 +273,7 @@ A seção `#escassez` nasce **oculta** e vazia:
   `data-deadline="2026-10-31T23:59:59-03:00"`, escreva o motivo verdadeiro do prazo e remova o
   `data-oculto-em-producao`. O contador aparece e se esconde sozinho quando a data passa.
 
-Regra do `CLAUDE.md`: **nunca** uma contagem regressiva ou "últimas vagas" que não corresponda à realidade.
+Regra preservada em `AGENTS.md`: **nunca** uma contagem regressiva ou "últimas vagas" que não corresponda à realidade.
 
 ---
 
@@ -196,38 +281,45 @@ Regra do `CLAUDE.md`: **nunca** uma contagem regressiva ou "últimas vagas" que 
 
 ```bash
 # rodar localmente
-npx serve .
+npm run dev
 
 # recompilar o CSS (só é necessário se você editar assets/css/input.css
-# ou usar uma classe Tailwind nova no index.html)
+# ou usar uma classe Tailwind nova no HTML/JS)
 npm run css
 
 # recompilar automaticamente enquanto edita
 npm run css:watch
 
-# publicar (só com confirmação explícita)
-vercel --prod
+# testes locais sem dependências extras
+npm test
+
+# preparar apenas arquivos públicos, sem publicar
+npm run build
 ```
 
 > `assets/css/tailwind.css` é gerado e **precisa ser versionado** — é ele que a página carrega.
-> O `node_modules/` existe só para rodar o compilador na sua máquina; ele não vai para o deploy.
+> O `node_modules/` existe só para desenvolvimento; ele não vai para o deploy.
+> Nenhum provedor foi escolhido: publique somente `dist/`, com autorização explícita.
+> Configurações de headers, TLS, cache e 404: veja `docs/deployment.md`.
 
 ---
 
 ## Checklist final antes de publicar
 
-- [ ] `grep -rn "PREENCHER" index.html assets/js/main.js robots.txt sitemap.xml` não retorna nada
+- [ ] Busca de placeholders revisada; conteúdo, links e configurações reais conferidos na página e nos metadados (comentários técnicos podem permanecer)
 - [ ] `data-modo="producao"` no `<html>`
+- [ ] Indexação liberada e URLs finais de canonical, compartilhamento e sitemap conferidas
 - [ ] Todos os CTAs levam ao checkout certo (testar o clique de verdade)
-- [ ] Pixels disparando (Meta Pixel Helper + GA4 DebugView)
+- [ ] Política de privacidade real e preferências de medição revisadas; pixels só após permissão (Meta Pixel Helper + GA4 DebugView)
 - [ ] Nenhum depoimento, número ou urgência fabricados
 - [ ] Sem rolagem horizontal em 320, 375, 414, 768, 1024, 1280 e 1440px
 - [ ] Navegação completa só pelo teclado (Tab/Enter), com foco sempre visível
-- [ ] Lighthouse mobile: Performance ≥ 90, SEO ≥ 95, Acessibilidade ≥ 95
+- [ ] Lighthouse mobile: Performance ≥ 90, SEO ≥ 95, Acessibilidade ≥ 95, Boas Práticas ≥ 95
 - [ ] JSON-LD sem erros no Google Rich Results Test
 - [ ] Preview do link testado no Facebook Sharing Debugger e no WhatsApp
 
-> **Linha de base já medida** (com os placeholders, antes do seu conteúdo entrar):
+> **Registro histórico de medição** (com os placeholders, antes do conteúdo real;
+> não reproduzido na auditoria nem na migração documental):
 > Lighthouse mobile **100 / 100 / 100 / 100** — Performance, Acessibilidade, Boas Práticas e SEO;
 > LCP 1,8s · CLS 0 · TBT 0ms. Zero overflow de 320px a 1920px.
 >
