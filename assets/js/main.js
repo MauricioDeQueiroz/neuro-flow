@@ -21,6 +21,8 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
     return typeof valor === 'string' && valor.length > 0 && valor.indexOf('PREENCHER') === -1;
   }
 
+  var rastreamentoPermitido = false;
+
   var reduzirMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------------------------------------------------------------------------
@@ -29,7 +31,7 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
      requisição quebrada nem poluiria o console durante o desenvolvimento.
      ------------------------------------------------------------------------ */
   function iniciarMetaPixel() {
-    if (!configurado(META_PIXEL_ID)) return;
+    if (!/^[0-9]{5,20}$/.test(META_PIXEL_ID)) return;
 
     /* eslint-disable */
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -44,7 +46,7 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
   }
 
   function iniciarGA4() {
-    if (!configurado(GA4_ID)) return;
+    if (!/^G-[A-Z0-9]{4,20}$/.test(GA4_ID)) return;
 
     var s = document.createElement('script');
     s.async = true;
@@ -59,12 +61,56 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
 
   /** Dispara o mesmo evento nos dois pixels, ignorando o que não estiver ativo. */
   function rastrear(eventoMeta, eventoGa4, parametros) {
+    if (!rastreamentoPermitido) return;
     if (window.fbq && configurado(META_PIXEL_ID)) {
       window.fbq(eventoMeta === 'InitiateCheckout' ? 'track' : 'trackCustom', eventoMeta, parametros || {});
     }
     if (window.gtag && configurado(GA4_ID)) {
       window.gtag('event', eventoGa4, parametros || {});
     }
+  }
+
+  /** Escolha explícita nesta aba; falha de armazenamento não libera medição. */
+  function prepararPrivacidade() {
+    if (!/^[0-9]{5,20}$/.test(META_PIXEL_ID) && !/^G-[A-Z0-9]{4,20}$/.test(GA4_ID)) return;
+    var painel = document.getElementById('preferencias-rastreamento');
+    var aceitar = document.getElementById('aceitar-rastreamento');
+    var recusar = document.getElementById('recusar-rastreamento');
+    var estado = document.getElementById('estado-rastreamento');
+    if (!painel || !aceitar || !recusar || !estado) return;
+    var chave = 'landing-preferencia-medicao';
+    var escolha = null;
+    try { escolha = sessionStorage.getItem(chave); } catch (e) { /* Sem persistência. */ }
+
+    function aplicar(permitir) {
+      if (permitir && !rastreamentoPermitido) {
+        rastreamentoPermitido = true;
+        iniciarMetaPixel();
+        iniciarGA4();
+      }
+      estado.textContent = permitir ? 'Medição permitida nesta aba.' : 'Medição desativada.';
+      aceitar.disabled = permitir;
+      recusar.textContent = permitir ? 'Retirar permissão' : 'Recusar medição';
+    }
+
+    aceitar.addEventListener('click', function () {
+      try { sessionStorage.setItem(chave, 'permitido'); } catch (e) { /* Só nesta página. */ }
+      aplicar(true);
+    });
+    recusar.addEventListener('click', function () {
+      try { sessionStorage.setItem(chave, 'recusado'); } catch (e) { /* Só nesta página. */ }
+      var estavaPermitido = rastreamentoPermitido;
+      rastreamentoPermitido = false;
+      aplicar(false);
+      // Recarrega para interromper os scripts dos provedores já inicializados.
+      if (estavaPermitido) {
+        window['ga-disable-' + GA4_ID] = true;
+        if (window.fbq) window.fbq('consent', 'revoke');
+        window.location.reload();
+      }
+    });
+    painel.classList.remove('hidden');
+    aplicar(escolha === 'permitido');
   }
 
   /* ---------------------------------------------------------------------------
@@ -85,7 +131,8 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
     var destino;
 
     try {
-      destino = new URL(CHECKOUT_URL, window.location.origin);
+      destino = new URL(CHECKOUT_URL);
+      if (destino.protocol !== 'https:' || destino.username || destino.password) return null;
     } catch (e) {
       return null;
     }
@@ -107,13 +154,15 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
     document.querySelectorAll('.js-checkout').forEach(function (botao) {
       if (urlCheckout) {
         botao.setAttribute('href', urlCheckout);
+        botao.removeAttribute('aria-disabled');
         botao.setAttribute('rel', 'noopener');
       } else {
         // Sem link real, o botão não navega para lugar nenhum nem finge que sim.
+        botao.removeAttribute('href');
         botao.setAttribute('aria-disabled', 'true');
         botao.addEventListener('click', function (evento) {
           evento.preventDefault();
-          console.warn('[landing] CHECKOUT_URL ainda não foi preenchido em assets/js/main.js');
+          console.warn('[landing] Checkout indisponível: confira a URL HTTPS e a integração da seleção do catálogo. Ver PREENCHER.md.');
         });
       }
     });
@@ -125,7 +174,7 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
 
         if (botao.classList.contains('js-checkout') && urlCheckout) {
           rastrear('InitiateCheckout', 'begin_checkout', { origem: origem });
-        } else {
+        } else if (!botao.classList.contains('js-checkout')) {
           rastrear('ClickCTA', 'select_promotion', { origem: origem });
         }
       });
@@ -138,36 +187,34 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
   function prepararMenu() {
     var botao = document.getElementById('menu-toggle');
     var painel = document.getElementById('menu-mobile');
-    if (!botao || !painel) return;
+    var detalhes = document.getElementById('menu-detalhes');
+    if (!botao || !painel || !detalhes) return;
 
+    function sincronizar() {
+      botao.setAttribute('aria-expanded', detalhes.open ? 'true' : 'false');
+      botao.setAttribute('aria-label', detalhes.open ? 'Fechar menu de navegação' : 'Abrir menu de navegação');
+    }
     function fechar() {
-      painel.classList.add('hidden');
-      botao.setAttribute('aria-expanded', 'false');
-      botao.setAttribute('aria-label', 'Abrir menu de navegação');
+      detalhes.open = false;
+      sincronizar();
     }
 
-    botao.addEventListener('click', function () {
-      var aberto = botao.getAttribute('aria-expanded') === 'true';
-      if (aberto) {
-        fechar();
-      } else {
-        painel.classList.remove('hidden');
-        botao.setAttribute('aria-expanded', 'true');
-        botao.setAttribute('aria-label', 'Fechar menu de navegação');
-      }
-    });
-
-    // Fecha ao escolher um destino, para não cobrir a seção recém-aberta.
+    // details/summary continua operável mesmo se o script não carregar.
+    detalhes.addEventListener('toggle', sincronizar);
     painel.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', fechar);
     });
-
     document.addEventListener('keydown', function (evento) {
-      if (evento.key === 'Escape' && botao.getAttribute('aria-expanded') === 'true') {
+      if (evento.key === 'Escape' && detalhes.open) {
         fechar();
         botao.focus();
       }
     });
+    var desktop = window.matchMedia('(min-width: 1024px)');
+    desktop.addEventListener('change', function (evento) {
+      if (evento.matches) fechar();
+    });
+    sincronizar();
   }
 
   /* ---------------------------------------------------------------------------
@@ -178,6 +225,9 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
       var painel = document.getElementById(botao.getAttribute('aria-controls'));
       var icone = botao.querySelector('.js-faq-icone');
       if (!painel) return;
+
+      botao.setAttribute('aria-expanded', 'false');
+      painel.classList.add('hidden');
 
       botao.addEventListener('click', function () {
         var aberto = botao.getAttribute('aria-expanded') === 'true';
@@ -206,6 +256,9 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
         if (entrada.isIntersecting) {
           entrada.target.classList.add('is-visible');
           observador.unobserve(entrada.target);
+        } else if (entrada.boundingClientRect.top >= window.innerHeight) {
+          // Usa a geometria já calculada pelo observador, sem forçar novo layout.
+          entrada.target.classList.add('is-pendente');
         }
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
@@ -229,8 +282,9 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
       var id = caixa.getAttribute('data-video-id');
       var provedor = caixa.getAttribute('data-video-provider') || 'youtube';
 
-      if (!configurado(id)) {
-        console.warn('[landing] data-video-id ainda não foi preenchido no #video-vsl (index.html)');
+      if (!configurado(id) || !((provedor === 'youtube' && /^[A-Za-z0-9_-]{11}$/.test(id)) ||
+          (provedor === 'vimeo' && /^[0-9]+$/.test(id)))) {
+        console.warn('[landing] Provedor ou ID de vídeo ausente/inválido no #video-vsl (index.html)');
         return;
       }
 
@@ -244,9 +298,9 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
       iframe.allowFullscreen = true;
       iframe.className = 'absolute inset-0 h-full w-full';
-      iframe.setAttribute('frameborder', '0');
+      iframe.style.border = '0';
 
-      caixa.innerHTML = '';
+      caixa.replaceChildren();
       caixa.appendChild(iframe);
 
       rastrear('PlayVSL', 'video_start', { origem: 'hero' });
@@ -256,7 +310,7 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
   /* ---------------------------------------------------------------------------
      7. CONTAGEM REGRESSIVA — só com prazo REAL.
      A seção #escassez nasce com class="hidden" e data-deadline="". Sem uma data
-     ISO futura preenchida ali, ela nunca aparece. Regra do CLAUDE.md: nunca uma
+     ISO futura preenchida ali, ela nunca aparece. Regra do AGENTS.md: nunca uma
      contagem regressiva que não corresponda à realidade.
      ------------------------------------------------------------------------ */
   function prepararContagem() {
@@ -319,8 +373,7 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
   }
 
   function iniciar() {
-    iniciarMetaPixel();
-    iniciarGA4();
+    prepararPrivacidade();
     prepararBotoes();
     prepararMenu();
     prepararFaq();

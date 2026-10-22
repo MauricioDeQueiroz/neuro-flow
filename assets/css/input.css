@@ -7,7 +7,7 @@
    A página carrega assets/css/tailwind.css (gerado). Sem build no deploy.
    ============================================================================= */
 
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 
 @source "../../index.html";
 @source "../js/main.js";
@@ -78,7 +78,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* Evita qualquer chance de overflow horizontal entre 320px e 1920px. */
+    /* Contém o glow decorativo; o conteúdo também deve caber sem este recorte. */
     overflow-x: hidden;
   }
 
@@ -288,20 +288,20 @@
 @layer components {
   /* O estado inicial escondido só existe quando o JS está ativo para revelar
      de volta. Sem JS (ou com o JS falhando), todo o conteúdo nasce visível. */
-  .js .reveal {
+  .reveal.is-pendente {
     opacity: 0;
     transform: translateY(12px);
   }
 
-  .js .reveal.is-visible {
+  .reveal.is-visible {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 360ms ease-out, transform 360ms ease-out;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .js .reveal,
-    .js .reveal.is-visible {
+    .reveal.is-pendente,
+    .reveal.is-visible {
       opacity: 1;
       transform: none;
       transition: none;
@@ -373,4 +373,21 @@
   [data-modo="producao"] [data-oculto-em-producao] {
     display: none !important;
   }
+}
+
+@layer components {
+  /* Sem animação dos ícones quando o visitante solicita movimento reduzido. */
+  @media (prefers-reduced-motion: reduce) {
+    .js-faq-icone { transition: none; }
+  }
+
+  /* O clip-path dos cards corta outlines externos; mantenha o foco dentro deles. */
+  .js-faq:focus-visible { outline-offset: -5px; }
+
+  a[aria-disabled="true"] { cursor: not-allowed; }
+  nav a, footer a { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+@layer components {
+  #menu-toggle::-webkit-details-marker { display: none; }
 }

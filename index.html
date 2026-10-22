@@ -55,10 +55,6 @@
 
   <link rel="stylesheet" href="assets/css/tailwind.css">
 
-  <!-- Marca que o JS está ativo. É o que autoriza o CSS a esconder as seções
-       antes do reveal — sem JS, nada fica invisível. -->
-  <script>document.documentElement.classList.add('js');</script>
-
   <!-- Dados estruturados: perguntas do FAQ. As respostas precisam ficar
        IDÊNTICAS ao que está visível na página (exigência do Google). -->
   <script type="application/ld+json">
@@ -152,11 +148,11 @@
     <nav class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8" aria-label="Navegação principal">
 
       <a href="#hero" class="font-display text-lg font-bold tracking-tight sm:text-xl">
-        [NOME DO EBOOK]
+        NEUROFLOW
       </a>
 
-      <ul class="hidden items-center gap-7 text-sm font-medium text-white/80 lg:flex">
-        <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#solucao">O ebook</a></li>
+      <ul class="hidden items-center gap-7 text-sm font-semibold text-white/80 lg:flex">
+        <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#solucao">Os ebooks</a></li>
         <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#beneficios">Benefícios</a></li>
         <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#autor">Autor</a></li>
         <li><a class="transition-opacity duration-150 ease-out hover:text-white" href="#oferta">Oferta</a></li>
@@ -164,41 +160,41 @@
       </ul>
 
       <a href="#preco" class="btn btn-primario js-cta hidden !min-h-11 !px-5 !text-sm lg:inline-flex" data-cta-origem="menu">
-        Quero o ebook
+        Ver os ebooks
         <span class="btn-mais" aria-hidden="true">+</span>
       </a>
 
-      <button
-        type="button"
-        id="menu-toggle"
-        class="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-surface lg:hidden"
-        aria-label="Abrir menu de navegação"
-        aria-expanded="false"
-        aria-controls="menu-mobile">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-6 w-6" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16"/>
-        </svg>
-      </button>
+      <details id="menu-detalhes" class="lg:hidden">
+        <summary
+          id="menu-toggle"
+          class="inline-flex h-11 w-11 cursor-pointer list-none items-center justify-center rounded-xl bg-surface lg:hidden"
+          aria-label="Menu de navegação"
+          aria-controls="menu-mobile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-6 w-6" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"/>
+          </svg>
+        </summary>
+        <div id="menu-mobile" class="absolute inset-x-0 top-full max-h-[70vh] overflow-y-auto border-t border-white/10 bg-bg lg:hidden">
+          <ul class="mx-auto flex w-full max-w-6xl flex-col px-5 py-2 sm:px-6">
+            <li><a class="block py-3 text-base font-semibold text-white/85" href="#solucao">Os ebooks</a></li>
+            <li><a class="block py-3 text-base font-semibold text-white/85" href="#beneficios">Benefícios</a></li>
+            <li><a class="block py-3 text-base font-semibold text-white/85" href="#autor">Autor</a></li>
+            <li><a class="block py-3 text-base font-semibold text-white/85" href="#oferta">Oferta</a></li>
+            <li><a class="block py-3 text-base font-semibold text-white/85" href="#faq">Dúvidas</a></li>
+            <li class="py-3">
+              <a href="#preco" class="btn btn-primario js-cta w-full" data-cta-origem="menu-mobile">
+                Ver os ebooks
+                <span class="btn-mais" aria-hidden="true">+</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </details>
     </nav>
-
-    <div id="menu-mobile" class="hidden border-t border-white/10 bg-bg lg:hidden">
-      <ul class="mx-auto flex w-full max-w-6xl flex-col px-5 py-2 sm:px-6">
-        <li><a class="block py-3 text-base font-medium text-white/85" href="#solucao">O ebook</a></li>
-        <li><a class="block py-3 text-base font-medium text-white/85" href="#beneficios">Benefícios</a></li>
-        <li><a class="block py-3 text-base font-medium text-white/85" href="#autor">Autor</a></li>
-        <li><a class="block py-3 text-base font-medium text-white/85" href="#oferta">Oferta</a></li>
-        <li><a class="block py-3 text-base font-medium text-white/85" href="#faq">Dúvidas</a></li>
-        <li class="py-3">
-          <a href="#preco" class="btn btn-primario js-cta w-full" data-cta-origem="menu-mobile">
-            Quero o ebook
-            <span class="btn-mais" aria-hidden="true">+</span>
-          </a>
-        </li>
-      </ul>
-    </div>
   </header>
 
   <main id="conteudo">
+    <noscript><p class="mx-auto max-w-6xl px-5 py-4">O vídeo e os botões de compra precisam de JavaScript. Você pode ler todo o conteúdo e as respostas abaixo.</p></noscript>
 
     <!-- ===================== 1. HERO + VSL ===================== -->
     <!-- Objetivo: capturar atenção em 5s e comunicar a promessa. Gatilho: curiosidade + clareza. -->
@@ -255,8 +251,7 @@
              <div class="glow-accent">
               <div
                 id="video-vsl"
-                class="corte-diagonal corte-diagonal-lg relative w-full overflow-hidden bg-surface"
-                style="aspect-ratio: 16 / 9;"
+                class="corte-diagonal corte-diagonal-lg relative aspect-video w-full overflow-hidden bg-surface"
                 data-video-provider="youtube"
                 data-video-id="[PREENCHER_ID_DO_VIDEO]">
 
@@ -272,7 +267,7 @@
                 <button
                   type="button"
                   class="js-play-video absolute inset-0 flex flex-col items-center justify-center gap-3 text-center"
-                  aria-label="Reproduzir o vídeo de apresentação">
+                  aria-label="Assista antes de decidir — reproduzir o vídeo de apresentação">
                   <span class="badge-quadrado !h-16 !w-16">
                     <svg viewBox="0 0 24 24" fill="currentColor" class="!h-7 !w-7" aria-hidden="true">
                       <path d="M8 5.14v13.72a1 1 0 0 0 1.54.84l10.3-6.86a1 1 0 0 0 0-1.68L9.54 4.3A1 1 0 0 0 8 5.14z"/>
@@ -615,7 +610,7 @@
             ou [PREENCHER: parcelamento real, ex. 12x de R$ XX,XX]
           </p>
 
-          <a href="#" class="btn btn-primario js-cta js-checkout mt-8 w-full" data-cta-origem="preco">
+          <a aria-disabled="true" role="link" class="btn btn-primario js-cta js-checkout mt-8 w-full" data-cta-origem="preco">
             Comprar agora
             <span class="btn-mais" aria-hidden="true">+</span>
           </a>
@@ -697,72 +692,72 @@
 
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-1">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-1">
                 <span>Como recebo o ebook depois da compra?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-1" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Processo real de entrega">
+            <div id="faq-1" class="px-5 pb-5 text-base text-white/70" data-pendente="Processo real de entrega">
               [PREENCHER: descreva o processo real de entrega — e-mail automático com o PDF, acesso à área de membros, prazo em minutos.]
             </div>
           </div>
 
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-2">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-2">
                 <span>Preciso de algum conhecimento prévio para aproveitar o conteúdo?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-2" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Nível exigido do leitor">
+            <div id="faq-2" class="px-5 pb-5 text-base text-white/70" data-pendente="Nível exigido do leitor">
               [PREENCHER: responda com honestidade sobre o nível de quem vai ler.]
             </div>
           </div>
 
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-3">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-3">
                 <span>Em quais aparelhos consigo ler?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-3" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Aparelhos compatíveis">
+            <div id="faq-3" class="px-5 pb-5 text-base text-white/70" data-pendente="Aparelhos compatíveis">
               [PREENCHER: celular, tablet, computador, Kindle — liste apenas o que realmente funciona.]
             </div>
           </div>
 
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-4">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-4">
                 <span>Quanto tempo por dia eu preciso reservar?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-4" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Tempo realista de leitura">
+            <div id="faq-4" class="px-5 pb-5 text-base text-white/70" data-pendente="Tempo realista de leitura">
               [PREENCHER: tempo realista de leitura ou prática, sem prometer resultado em prazo fixo.]
             </div>
           </div>
 
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-5">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-5">
                 <span>E se eu não gostar? Como funciona a garantia?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-5" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Condições reais de reembolso (mesmo texto da seção Garantia)">
+            <div id="faq-5" class="px-5 pb-5 text-base text-white/70" data-pendente="Condições reais de reembolso (mesmo texto da seção Garantia)">
               [PREENCHER: prazo real da garantia e o passo a passo exato do reembolso — precisa refletir o que será cumprido.]
             </div>
           </div>
 
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-6">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-6">
                 <span>O pagamento é seguro? Quais formas são aceitas?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-6" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Plataforma de checkout e formas de pagamento">
+            <div id="faq-6" class="px-5 pb-5 text-base text-white/70" data-pendente="Plataforma de checkout e formas de pagamento">
               [PREENCHER: nome da plataforma de checkout e as formas de pagamento realmente disponíveis.]
             </div>
           </div>
@@ -770,12 +765,12 @@
           <!-- Resposta real, não precisa preencher. -->
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-7">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-7">
                 <span>Este material substitui acompanhamento pastoral, médico ou psicológico?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-7" class="hidden px-5 pb-5 text-base text-white/70">
+            <div id="faq-7" class="px-5 pb-5 text-base text-white/70">
               Não. Este ebook é um material de estudo e reflexão e não substitui acompanhamento pastoral,
               médico ou psicológico. Se você está enfrentando uma situação de saúde física ou mental,
               procure um profissional qualificado.
@@ -784,12 +779,12 @@
 
           <div class="corte-diagonal bg-surface">
             <h3>
-              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="false" aria-controls="faq-8">
+              <button type="button" class="js-faq flex w-full items-center justify-between gap-4 p-5 text-left text-base font-semibold sm:text-lg" aria-expanded="true" aria-controls="faq-8">
                 <span>Com quem falo se tiver algum problema?</span>
                 <span class="js-faq-icone shrink-0 text-accent transition-transform duration-200 ease-out" aria-hidden="true">+</span>
               </button>
             </h3>
-            <div id="faq-8" class="hidden px-5 pb-5 text-base text-white/70" data-pendente="Canal de suporte real">
+            <div id="faq-8" class="px-5 pb-5 text-base text-white/70" data-pendente="Canal de suporte real">
               [PREENCHER: e-mail ou WhatsApp real de suporte e o prazo médio de resposta.]
             </div>
           </div>
@@ -811,7 +806,7 @@
           O primeiro passo costuma ser o mais difícil. Depois dele, é só caminhada.
         </p>
 
-        <a href="#" class="btn btn-secundario js-cta js-checkout mt-9 w-full sm:w-auto" data-cta-origem="cta-final">
+        <a aria-disabled="true" role="link" class="btn btn-secundario js-cta js-checkout mt-9 w-full sm:w-auto" data-cta-origem="cta-final">
           Quero meu exemplar
           <span class="btn-mais" aria-hidden="true">+</span>
         </a>
@@ -825,6 +820,18 @@
     </section>
 
   </main>
+
+  <!-- Só aparece com IDs de analytics válidos; nada é carregado antes da escolha. -->
+  <aside id="preferencias-rastreamento" class="hidden border-t border-white/10 bg-surface px-5 py-6" aria-label="Preferências de privacidade">
+    <div class="mx-auto max-w-6xl">
+      <p class="text-base">Com sua autorização, usamos Google Analytics e/ou Meta Pixel para medir visitas e cliques e compartilhar esses dados com os respectivos provedores. Você pode recusar e continuar navegando. A escolha vale nesta aba e pode ser alterada abaixo.</p>
+      <p id="estado-rastreamento" class="mt-3 text-sm text-white" role="status"></p>
+      <div class="mt-4 flex flex-wrap gap-3">
+        <button id="aceitar-rastreamento" type="button" class="btn btn-secundario">Permitir medição</button>
+        <button id="recusar-rastreamento" type="button" class="btn btn-secundario">Recusar medição</button>
+      </div>
+    </div>
+  </aside>
 
   <!-- ===================== 14. RODAPÉ ===================== -->
   <footer class="border-t border-white/10 px-5 py-12 sm:px-6 lg:px-8">
