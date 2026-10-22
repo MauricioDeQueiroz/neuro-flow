@@ -1,4 +1,5 @@
-import { copyFile, mkdir, readdir } from 'node:fs/promises';
+import { copyFile, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { arquivosPublicos } from './public-files.mjs';
@@ -19,4 +20,13 @@ for (const arquivo of arquivos) {
   await mkdir(dirname(resolve(destino, arquivo)), { recursive: true });
   await copyFile(resolve(raiz, arquivo), resolve(destino, arquivo));
 }
+// Uma URL nova a cada mudança impede combinar HTML atual com CSS/JS em cache.
+const pagina = resolve(destino, 'index.html');
+let html = await readFile(pagina, 'utf8');
+for (const arquivo of ['assets/css/tailwind.css', 'assets/js/main.js']) {
+  const conteudo = await readFile(resolve(destino, arquivo));
+  const versao = createHash('sha256').update(conteudo).digest('hex').slice(0, 16);
+  html = html.replaceAll(`="${arquivo}"`, `="${arquivo}?v=${versao}"`);
+}
+await writeFile(pagina, html);
 console.log(`Pacote estático: ${arquivos.length} arquivos em dist/. CSS previamente compilado; nada publicado.`);
