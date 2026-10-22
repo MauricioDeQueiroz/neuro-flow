@@ -6,11 +6,21 @@
   "scripts": {
     "css": "tailwindcss -i assets/css/input.css -o assets/css/tailwind.css --minify",
     "css:watch": "tailwindcss -i assets/css/input.css -o assets/css/tailwind.css --watch",
-    "dev": "npx serve ."
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --check assets/js/main.js && node --test",
+    "test:browser": "node scripts/check-browser.mjs",
+    "test:catalogo": "node scripts/check-catalogo.mjs"
   },
   "license": "UNLICENSED",
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
     "tailwindcss": "^4.3.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "overrides": {
+    "@parcel/watcher": "2.6.0"
   }
 }
