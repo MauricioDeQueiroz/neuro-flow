@@ -8,3 +8,11 @@ node_modules/
 
 # Configuração local do Claude Code (não compartilhar)
 .claude/settings.local.json
+
+# Pacote público gerado localmente
+dist/
+
+# Credenciais locais não devem ser versionadas
+.env
+.env.*
+!.env.example
