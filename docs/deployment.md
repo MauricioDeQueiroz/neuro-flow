@@ -7,8 +7,9 @@ pendentes. Os passos abaixo também permitem preparar o pacote para outros prove
 ## Prévia no GitHub Pages
 
 Endereço mantido: https://mauriciodequeiroz.github.io/neuro-flow/.
-O fluxo `.github/workflows/pages.yml` executa `npm ci`, `npm test` e `npm run build`
-em Node 22 e envia apenas `dist/` ao Pages. O CSS é compilado localmente e versionado;
+O fluxo `.github/workflows/pages.yml` executa `npm test` e `npm run build` em Node 22
+e envia apenas `dist/` ao Pages. Esses comandos usam apenas módulos nativos do Node;
+o fluxo não precisa instalar dependências. O CSS é compilado localmente e versionado;
 o fluxo não o recompila. A origem de publicação em Settings → Pages deve ser
 **GitHub Actions**, substituindo a publicação anterior da raiz de `main`.
 
