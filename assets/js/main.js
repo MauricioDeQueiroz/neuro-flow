@@ -125,6 +125,9 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
   ];
 
   function montarUrlCheckout() {
+    // O checkout antigo recebe um único destino e ainda não representa a seleção.
+    var catalogo = document.getElementById('catalogo-ebooks');
+    if (catalogo && catalogo.hasAttribute('data-checkout-pendente')) return null;
     if (!configurado(CHECKOUT_URL)) return null;
 
     var entrada = new URLSearchParams(window.location.search);
@@ -294,7 +297,7 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
 
       var iframe = document.createElement('iframe');
       iframe.src = src;
-      iframe.title = 'Vídeo de apresentação do ebook';
+      iframe.title = 'Vídeo de apresentação da coleção NEUROFLOW';
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
       iframe.allowFullscreen = true;
       iframe.className = 'absolute inset-0 h-full w-full';
@@ -352,6 +355,181 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
     var intervalo = setInterval(atualizar, 1000);
   }
 
+  /* Catálogo: conteúdo permanece no HTML; seleção apenas nesta página, sem pagamento. */
+  function prepararCatalogo() {
+    var catalogo = document.getElementById('catalogo-ebooks');
+    if (!catalogo) return;
+    var viewport = document.getElementById('catalogo-viewport');
+    var trilho = document.getElementById('catalogo-trilho');
+    var anterior = document.getElementById('catalogo-anterior');
+    var proximo = document.getElementById('catalogo-proximo');
+    var posicao = document.getElementById('catalogo-posicao');
+    var vazio = document.getElementById('catalogo-vazio');
+    var status = document.getElementById('catalogo-status');
+    var quantidade = document.getElementById('catalogo-quantidade');
+    var incentivo = document.getElementById('catalogo-incentivo');
+    var lista = document.getElementById('catalogo-selecionados');
+    var limpar = document.getElementById('catalogo-limpar');
+    var completo = document.getElementById('catalogo-completo');
+    if (!viewport || !trilho || !anterior || !proximo || !posicao ||
+        !vazio || !status || !quantidade || !incentivo || !lista || !limpar || !completo) return;
+
+    var itens = Array.from(trilho.querySelectorAll('[data-ebook]'));
+    var filtros = Array.from(catalogo.querySelectorAll('[data-filtro]'));
+    if (!itens.length) return;
+    var filtrados = itens.slice();
+    var selecionados = new Set();
+    var inicio = 0;
+    var movimento = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var sobre = false;
+    var tocando = false;
+    var moldura = catalogo.querySelector('.catalogo-moldura') || viewport;
+    var naTela = !('IntersectionObserver' in window);
+
+    function porPagina() {
+      return window.innerWidth >= 1024 ? 3 : window.innerWidth >= 640 ? 2 : 1;
+    }
+    function atualizarVista(anunciar) {
+      var tamanho = porPagina();
+      inicio = Math.max(0, Math.min(inicio, Math.max(0, filtrados.length - tamanho)));
+      var visiveis = filtrados.slice(inicio, inicio + tamanho);
+      itens.forEach(function (item) {
+        item.hidden = filtrados.indexOf(item) === -1;
+        item.inert = visiveis.indexOf(item) === -1;
+        item.setAttribute('aria-hidden', item.inert ? 'true' : 'false');
+      });
+      // offsetLeft é lido uma única vez por troca; animação apenas por transform.
+      var alvo = filtrados[inicio];
+      trilho.style.transform = 'translateX(-' + (alvo ? alvo.offsetLeft : 0) + 'px)';
+      anterior.disabled = proximo.disabled = filtrados.length <= tamanho;
+      vazio.classList.toggle('hidden', filtrados.length > 0);
+      viewport.classList.toggle('hidden', filtrados.length === 0);
+      posicao.textContent = filtrados.length ? (inicio + 1) + '–' + Math.min(inicio + tamanho, filtrados.length) + ' de ' + filtrados.length + ' ebooks' : '0 ebooks neste tema';
+      if (anunciar) status.textContent = posicao.textContent;
+    }
+    function avancar(direcao, anunciar) {
+      var limite = Math.max(0, filtrados.length - porPagina());
+      inicio = direcao > 0 ? (inicio >= limite ? 0 : inicio + 1) : (inicio <= 0 ? limite : inicio - 1);
+      atualizarVista(anunciar);
+    }
+    function nome(item) {
+      var titulo = item.querySelector('h3');
+      return titulo && configurado(titulo.textContent) ? titulo.textContent.trim() : 'Ebook ' + item.getAttribute('data-numero');
+    }
+    function atualizarSelecao() {
+      var total = selecionados.size;
+      quantidade.textContent = total ? total + (total === 1 ? ' ebook selecionado.' : ' ebooks selecionados.') : 'Nenhum ebook selecionado.';
+      if (!total) incentivo.textContent = 'Escolha uma leitura para começar.';
+      else if (total < 5) incentivo.textContent = 'Faltam ' + (5 - total) + ((5 - total) === 1 ? ' ebook' : ' ebooks') + ' para completar sua seleção de 5.';
+      else if (total === 5) incentivo.textContent = 'Você escolheu 5 ebooks. Sua seleção para o combo está completa.';
+      else if (total < itens.length) incentivo.textContent = 'Você selecionou ' + total + '. Faltam ' + (itens.length - total) + ' para completar a coleção com ' + itens.length + ' ebooks.';
+      else incentivo.textContent = 'Coleção completa: você selecionou os ' + itens.length + ' ebooks.';
+      lista.replaceChildren();
+      itens.forEach(function (item) {
+        var ativo = selecionados.has(item.id);
+        var botao = item.querySelector('.js-selecionar-ebook');
+        if (!botao) return;
+        botao.disabled = false;
+        botao.setAttribute('aria-pressed', ativo ? 'true' : 'false');
+        botao.setAttribute('aria-label', (ativo ? 'Remover ' : 'Selecionar ') + nome(item));
+        botao.textContent = ativo ? 'Selecionado ✓' : 'Selecionar';
+        botao.classList.toggle('btn-primario', ativo);
+        botao.classList.toggle('btn-secundario', !ativo);
+        if (!ativo) return;
+        var li = document.createElement('li');
+        var remover = document.createElement('button');
+        remover.type = 'button';
+        remover.className = 'btn btn-secundario';
+        remover.setAttribute('data-remover', item.id);
+        remover.setAttribute('aria-label', 'Remover ' + nome(item) + ' da seleção');
+        remover.textContent = nome(item) + ' ×';
+        li.appendChild(remover);
+        lista.appendChild(li);
+      });
+      limpar.disabled = !total;
+      completo.disabled = total === itens.length;
+    }
+
+    anterior.addEventListener('click', function () { avancar(-1, true); });
+    proximo.addEventListener('click', function () { avancar(1, true); });
+    moldura.addEventListener('pointerenter', function (evento) { if (evento.pointerType === 'mouse') sobre = true; });
+    moldura.addEventListener('pointerleave', function (evento) { if (evento.pointerType === 'mouse') sobre = false; });
+    viewport.addEventListener('keydown', function (evento) {
+      if (evento.target !== viewport || ['ArrowLeft', 'ArrowRight'].indexOf(evento.key) === -1) return;
+      evento.preventDefault(); avancar(evento.key === 'ArrowRight' ? 1 : -1, true);
+    });
+    var toque = null;
+    viewport.addEventListener('touchstart', function (evento) {
+      tocando = true;
+      toque = evento.touches.length === 1 && !evento.target.closest('button') ? evento.touches[0] : null;
+    }, { passive: true });
+    viewport.addEventListener('touchend', function (evento) {
+      tocando = false;
+      if (!toque || !evento.changedTouches.length) return;
+      var fim = evento.changedTouches[0];
+      var dx = fim.clientX - toque.clientX;
+      var dy = fim.clientY - toque.clientY;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) avancar(dx < 0 ? 1 : -1, true);
+      toque = null;
+    }, { passive: true });
+    viewport.addEventListener('touchcancel', function () { tocando = false; toque = null; }, { passive: true });
+    filtros.forEach(function (botao) {
+      botao.addEventListener('click', function () {
+        var tema = botao.getAttribute('data-filtro');
+        filtrados = itens.filter(function (item) {
+          return tema === 'todos' || (item.getAttribute('data-temas') || '').split(/\s+/).indexOf(tema) !== -1;
+        });
+        filtros.forEach(function (filtro) { filtro.setAttribute('aria-pressed', filtro === botao ? 'true' : 'false'); });
+        vazio.textContent = 'Os ebooks do tema ' + botao.textContent.trim() + ' ainda estão em preparação. Volte a Todos para ver os 11 espaços da coleção.';
+        inicio = 0;
+        atualizarVista(true);
+      });
+    });
+    trilho.addEventListener('click', function (evento) {
+      var botao = evento.target.closest('.js-selecionar-ebook');
+      if (!botao) return;
+
+      var item = botao.closest('[data-ebook]');
+      if (!item || itens.indexOf(item) === -1) return;
+      if (selecionados.has(item.id)) selecionados.delete(item.id);
+      else selecionados.add(item.id);
+      atualizarSelecao();
+    });
+    lista.addEventListener('click', function (evento) {
+      var botao = evento.target.closest('[data-remover]');
+      if (!botao) return;
+      selecionados.delete(botao.getAttribute('data-remover')); atualizarSelecao();
+      document.getElementById('resumo-catalogo-titulo').focus();
+    });
+    limpar.addEventListener('click', function () {
+      selecionados.clear(); atualizarSelecao();
+      document.getElementById('resumo-catalogo-titulo').focus();
+    });
+    completo.addEventListener('click', function () {
+      itens.forEach(function (item) { selecionados.add(item.id); }); atualizarSelecao();
+    });
+    window.addEventListener('resize', function () {
+      var focado = document.activeElement && document.activeElement.closest('[data-ebook]');
+      var indice = filtrados.indexOf(focado);
+      if (indice >= 0 && (indice < inicio || indice >= inicio + porPagina())) inicio = indice;
+      atualizarVista(false);
+    });
+    if ('IntersectionObserver' in window) {
+      var observador = new IntersectionObserver(function (entradas) { naTela = entradas[0].isIntersecting; });
+      observador.observe(viewport);
+    }
+    catalogo.classList.add('catalogo-pronto');
+    document.getElementById('catalogo-controles').classList.remove('hidden');
+    document.getElementById('catalogo-resumo').classList.remove('hidden');
+    atualizarVista(false); atualizarSelecao();
+    window.setInterval(function () {
+      var ativo = document.activeElement;
+      var focoPorTeclado = ativo && catalogo.contains(ativo) && ativo.matches(':focus-visible');
+      if (!movimento.matches && !document.hidden && !sobre && !tocando && !focoPorTeclado &&
+          naTela && filtrados.length > porPagina()) avancar(1, false);
+    }, 5500);
+  }
+
   /* ---------------------------------------------------------------------------
      8. Detalhes finais
      ------------------------------------------------------------------------ */
@@ -380,6 +558,7 @@ var GA4_ID         = '[PREENCHER_GA4_ID]';          // ex.: G-XXXXXXXXXX
     prepararReveal();
     prepararVideo();
     prepararContagem();
+    prepararCatalogo();
     prepararRodape();
     avisarPendencias();
   }

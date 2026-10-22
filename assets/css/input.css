@@ -391,3 +391,40 @@
 @layer components {
   #menu-toggle::-webkit-details-marker { display: none; }
 }
+
+/* Catálogo: lista legível sem JS; carrossel só após preparar controles e seleção. */
+@layer components {
+  .catalogo-seta { display: none; }
+  .catalogo-pronto .catalogo-moldura {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .catalogo-pronto .catalogo-seta { display: inline-flex; }
+  .catalogo-pronto #catalogo-anterior { grid-column: 1; grid-row: 1; }
+  .catalogo-pronto .catalogo-viewport { grid-column: 2; grid-row: 1; }
+  .catalogo-pronto #catalogo-proximo { grid-column: 3; grid-row: 1; }
+  .catalogo-trilho { display: grid; gap: 1rem; }
+  .ebook-item { min-width: 0; }
+  .catalogo-pronto .catalogo-viewport { overflow: hidden; touch-action: pan-y; }
+  .catalogo-pronto .catalogo-trilho {
+    position: relative;
+    display: flex;
+    transition: transform 220ms ease-out;
+  }
+  .catalogo-pronto .ebook-item { flex: 0 0 100%; }
+  .js-filtro-ebook[aria-pressed="true"] { background: var(--color-accent); color: #ffffff; }
+  #catalogo-ebooks button:disabled { cursor: not-allowed; opacity: 0.6; }
+  @media (min-width: 640px) {
+    .catalogo-trilho { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .catalogo-pronto .ebook-item { flex-basis: calc((100% - 1rem) / 2); }
+  }
+  @media (min-width: 1024px) {
+    .catalogo-trilho { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .catalogo-pronto .ebook-item { flex-basis: calc((100% - 2rem) / 3); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .catalogo-pronto .catalogo-trilho { transition: none; }
+  }
+}
