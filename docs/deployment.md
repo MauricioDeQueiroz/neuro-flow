@@ -106,6 +106,12 @@ Veja [Cloudflare headers](https://developers.cloudflare.com/pages/configuration/
 
 ## Cache e verificação remota
 
+O build versiona as URLs do CSS e do JavaScript em `dist/index.html` com `?v=` e
+um hash do conteúdo. A versão só muda quando o recurso muda, evitando que o HTML
+novo use CSS/JS de uma publicação anterior ainda no cache. Os nomes dos arquivos e
+as referências do HTML fonte local são preservados. O HTML em si ainda está sujeito
+ao cache do provedor; uma aba já aberta precisa ser recarregada para receber a versão.
+
 HTML, CSS, JS, imagens e fontes usam nomes estáveis: revalide com ETag/Last-Modified;
 `max-age=0, must-revalidate` permite armazenar, mas exige verificar atualização.
 Só adote cache longo/immutable para nomes com versão/hash. URLs já armazenadas com a

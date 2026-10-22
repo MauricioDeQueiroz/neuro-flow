@@ -114,6 +114,10 @@ Actions**. Antes de enviar alterações de HTML, JS ou estilos, execute `npm run
 `npm test` e `npm run build`; inclua o CSS gerado no commit correspondente.
 Confira a conclusão em Actions → Publicar prévia no GitHub Pages.
 
+O build acrescenta uma versão baseada no conteúdo às URLs de CSS e JavaScript em
+`dist/index.html`. Assim, quem já abriu o link recebe os recursos novos após uma
+atualização, sem reutilizar CSS/JS antigos. O HTML fonte local permanece intacto.
+
 A prévia continua em `data-modo="rascunho"`, com `noindex, nofollow` e checkout
 bloqueado enquanto a integração múltipla estiver pendente. Não equivale ao lançamento
 comercial. Testes, scripts e documentação ficam no repositório, fora do site servido.
